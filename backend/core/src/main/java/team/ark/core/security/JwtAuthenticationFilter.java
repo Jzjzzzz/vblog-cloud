@@ -33,10 +33,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                                     FilterChain filterChain) throws IOException, ServletException {
         JwtProperties jwt = SpringUtils.getBean(request, JwtProperties.class);
         String token = request.getHeader(jwt.getTokenHeader());
-        if (token == null) {
-//            WebUtils.write(response, R.with(C.USER_NOT_LOGIN));
-//            return;
-        } else if (token.startsWith(jwt.getTokenPrefix())) {
+        String requestURI = request.getRequestURI();
+        if (token == null && !requestURI.startsWith("/doc.html") && !requestURI.startsWith(
+                "/webjars/bycdao-ui/") && !requestURI.startsWith("/druid")) {
+            log.info("request.getRequestURI(): {}",request.getRequestURI());
+            WebUtils.write(response, R.with(C.USER_NOT_LOGIN));
+            return;
+        } else if (token != null && token.startsWith(jwt.getTokenPrefix())) {
             IUserDetails userDetails = JwtUtils.parseAccessToken(token);
             if (userDetails != null) {
                 UsernamePasswordAuthenticationToken authentication =
