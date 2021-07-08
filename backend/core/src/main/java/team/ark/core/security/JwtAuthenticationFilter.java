@@ -34,8 +34,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         JwtProperties jwt = SpringUtils.getBean(request, JwtProperties.class);
         String token = request.getHeader(jwt.getTokenHeader());
         if (token == null) {
-            WebUtils.write(response, R.with(C.USER_NOT_LOGIN));
-            return;
+//            WebUtils.write(response, R.with(C.USER_NOT_LOGIN));
+//            return;
         } else if (token.startsWith(jwt.getTokenPrefix())) {
             IUserDetails userDetails = JwtUtils.parseAccessToken(token);
             if (userDetails != null) {
