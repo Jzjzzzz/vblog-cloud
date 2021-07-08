@@ -1,0 +1,42 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: blogserver
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/vueblog2?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 276364092
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    use-deprecated-executor: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+logging:
+  level:
+    root: info
+
+ark:
+  jwt:
+    secret-key: ImV4c.CI6M!TYx%?Mjc4M@zY5
+    token-header: X-Token
+    expiration: 86400
+  cache:
+    type: memory
+    timeout: 10
+    timeunit: minutes
+  druid:
+    url: /druid
+    username: druid
+    password: druid
+    allow: 127.0.0.2, 127.0.0.1
+    deny: 192.1.1.1, 192.1.1.2, 192.1.1.3
+
