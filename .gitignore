@@ -27,6 +27,7 @@ hs_err_pid*
 */dist/
 */node_modules/
 backend/build/
+**/target/
 
 HELP.md
 .gradle
