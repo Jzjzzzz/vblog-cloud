@@ -45,7 +45,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 权限配置
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/admin").permitAll()
                 .and().logout()
                 // 登出成功处理器
                 .logoutSuccessHandler((request, response, authentication) -> {

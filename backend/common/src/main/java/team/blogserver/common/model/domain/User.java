@@ -1,9 +1,12 @@
 package team.blogserver.common.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.data.annotation.Transient;
 
 /**
  * 用户Entity
@@ -24,6 +27,7 @@ public class User extends Domain {
     private String username;
     @ApiModelProperty("昵称")
     private String nickname;
+    @JsonIgnore
     @ApiModelProperty("密码")
     private String password;
     @ApiModelProperty("可用状态")

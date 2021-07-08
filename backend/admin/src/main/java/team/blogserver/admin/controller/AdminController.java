@@ -13,7 +13,7 @@ import team.blogserver.admin.service.UserService;
 import javax.annotation.Resource;
 
 @Slf4j
-@RestController
+@RestController()
 @Api(value = "测试集")
 public class AdminController {
     @Resource
