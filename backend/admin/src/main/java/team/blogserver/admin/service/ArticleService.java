@@ -1,11 +1,12 @@
 package team.blogserver.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import team.blogserver.common.mapper.ArticleMapper;
 import team.blogserver.common.model.domain.Article;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,11 +17,5 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class ArticleService {
-    @Resource
-    private ArticleMapper articleMapper;
-
-    public List<Article> getAll() {
-        return articleMapper.selectList(null);
-    }
+public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
 }

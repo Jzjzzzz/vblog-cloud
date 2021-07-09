@@ -20,6 +20,6 @@ import lombok.*;
 @TableName("roles")
 public class Roles extends Domain {
     private static final long serialVersionUID = -8233812592683226379L;
-    @ApiModelProperty("权限名")
+    @ApiModelProperty("角色名")
     private String name;
 }
