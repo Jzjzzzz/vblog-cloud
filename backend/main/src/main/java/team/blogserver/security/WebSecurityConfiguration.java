@@ -46,7 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 权限配置
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
-                .and().logout()
+                .and().logout().logoutUrl("/user/logout")
                 // 登出成功处理器
                 .logoutSuccessHandler((request, response, authentication) -> {
                     SecurityContextHolder.clearContext();

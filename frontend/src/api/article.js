@@ -6,3 +6,9 @@ export function list(page, limit, title) {
     method: 'get',
   })
 }
+export function del(id) {
+  return request({
+    url: `/article/delete/${id}`,
+    method: 'delete',
+  })
+}

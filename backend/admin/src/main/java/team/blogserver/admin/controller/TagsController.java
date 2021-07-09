@@ -21,7 +21,6 @@ import java.util.List;
 @RestController
 @Api(value = "后台标签接口")
 @RequestMapping("/tags")
-@CrossOrigin //跨域
 public class TagsController {
     @Resource
     private TagsService tagsService;
