@@ -21,7 +21,6 @@ import java.io.InputStream;
 @Slf4j
 @Api(value = "阿里云文件管理")
 @RestController
-@CrossOrigin
 @RequestMapping("/file")
 public class FileController {
     @Resource

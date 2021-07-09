@@ -16,7 +16,6 @@ import team.blogserver.common.model.domain.User;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-@CrossOrigin //跨域
 @RestController
 @RequestMapping("/sms")
 @Api(value = "短信管理")

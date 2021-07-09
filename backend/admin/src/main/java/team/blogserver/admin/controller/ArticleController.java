@@ -24,8 +24,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("/article")
 @Api(value = "文章API")
-@CrossOrigin //跨域
-
 public class ArticleController {
     @Resource
     private ArticleService articleService;

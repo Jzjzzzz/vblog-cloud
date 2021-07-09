@@ -53,6 +53,10 @@
   import {
     validUsername
   } from '@/utils/validate'
+  import request from '@/utils/request'
+  import { getInfo, login } from '@/api/user'
+  import { setToken } from '@/utils/auth'
+  import store from '@/store'
 
   export default {
     name: 'Login',
@@ -72,7 +76,7 @@
         },
         checked: true,
         loginForm: {
-          username: 'sang',
+          username: 'linghu',
           password: '123',
           phone: '',
           code: ''
@@ -96,28 +100,24 @@
       submitClick: function() {
         var _this = this;
         this.loading = true;
-        postRequest('/login', {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        }).then(resp => {
-          _this.loading = false;
-          if (resp.status == 200) {
-            //成功
-            var json = resp.data;
-            if (json.status == 'success') {
-              _this.$router.replace({
-                path: '/home'
-              });
-            } else {
-              _this.$alert('登录失败!', '失败!');
-            }
-          } else {
-            //失败
-            _this.$alert('登录失败!', '失败!');
-          }
-        }, resp => {
-          _this.loading = false;
-          _this.$alert('找不到服务器⊙﹏⊙∥!', '失败!');
+        login({
+          username: _this.loginForm.username,
+          password: _this.loginForm.password,
+        }).then(res => {
+          // 成功
+          // 设置Token
+          setToken(res.data)
+          // 拿用户信息
+          getInfo().then(res=>{
+            console.log('userinfo', res.data)
+          })
+          // 跳转
+          _this.$router.replace({
+            path: '/dashboard'
+          });
+        }).catch(err => {
+          // 失败
+          _this.$alert('失败!', err.message);
         });
       }
     }

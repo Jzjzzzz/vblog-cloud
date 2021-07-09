@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import team.ark.core.response.R;
+import team.ark.core.security.JwtUtils;
 import team.blogserver.admin.service.UserService;
 import team.blogserver.common.model.domain.User;
 
@@ -19,7 +20,6 @@ import javax.annotation.Resource;
 @RestController
 @Api(value = "用户管理")
 @RequestMapping("/user")
-@CrossOrigin //跨域
 public class UserController {
     @Resource
     private UserService userService;
@@ -95,5 +95,14 @@ public class UserController {
     @PutMapping("/update")
     public R update(@RequestBody User user) {
         return R.judge(userService.updateById(user));
+    }
+
+    /**
+     * 根据当前Token获取用户信息详情
+     */
+    @ApiOperation("根据当前Token获取用户信息详情")
+    @GetMapping("/my")
+    public R my() {
+        return R.judge(userService.getById(JwtUtils.<Long>getId()));
     }
 }

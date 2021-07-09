@@ -80,6 +80,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import countTo from 'vue-count-to'
+import { list } from '@/api/article'
 export default {
 
   name: 'Dashboard',
@@ -91,6 +92,14 @@ export default {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }
+  },
+  created() {
+    // 测试任意接口带token请求
+    list(1,10, '').then(res => {
+      console.log('article list', res)
+    }).catch(err => {
+      console.error(err)
+    })
   }
 }
 </script>
