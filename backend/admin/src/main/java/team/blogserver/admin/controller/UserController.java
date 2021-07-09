@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(value = "用户管理")
 @RequestMapping("/user")
+@CrossOrigin //跨域
 public class UserController {
     @Resource
     private UserService userService;

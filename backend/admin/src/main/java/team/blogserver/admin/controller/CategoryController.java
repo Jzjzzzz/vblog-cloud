@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/category")
 @Api(value = "后台分类接口")
+@CrossOrigin //跨域
 public class CategoryController {
     @Resource
     private CategoryService categoryService;
