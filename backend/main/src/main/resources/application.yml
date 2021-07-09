@@ -47,3 +47,10 @@ ark:
     allow: 127.0.0.2, 127.0.0.1
     deny: 192.1.1.1, 192.1.1.2, 192.1.1.3
 
+#阿里云oss
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    keyId: LTAI5tRYMRSF5FTUEn7HZHDR
+    keySecret: CGboVCVQrXvUIh1Hhlx50zonZRQpv8
+    bucketName: vblog-jzj

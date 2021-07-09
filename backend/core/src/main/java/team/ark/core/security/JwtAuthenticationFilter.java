@@ -34,8 +34,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         JwtProperties jwt = SpringUtils.getBean(request, JwtProperties.class);
         String token = request.getHeader(jwt.getTokenHeader());
         String requestURI = request.getRequestURI();
-        if (token == null && !requestURI.startsWith("/doc.html") && !requestURI.startsWith(
-                "/webjars/bycdao-ui/") && !requestURI.startsWith("/druid")) {
+        if (token == null
+                && !requestURI.startsWith("/doc.html")
+                && !requestURI.startsWith("/webjars/bycdao-ui/")
+                && !requestURI.startsWith("/swagger-resources")
+                && !requestURI.startsWith("/v2/api-docs")
+                && !requestURI.startsWith("/druid")) {
             log.info("request.getRequestURI(): {}",request.getRequestURI());
             WebUtils.write(response, R.with(C.USER_NOT_LOGIN));
             return;
