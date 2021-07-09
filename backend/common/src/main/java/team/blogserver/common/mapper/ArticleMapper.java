@@ -16,6 +16,8 @@ import team.blogserver.common.model.domain.Article;
 @Repository
 public interface ArticleMapper extends Mapper<Article> {
     @Results(id = "mapping", value = {
+            @Result(column = "cid", property = "category",
+                    one = @One(select = "team.blogserver.common.mapper.CategoryMapper.selectById")),
             @Result(column = "uid", property = "author",
                     one = @One(select = "team.blogserver.common.mapper.UserMapper.selectById"))
     })

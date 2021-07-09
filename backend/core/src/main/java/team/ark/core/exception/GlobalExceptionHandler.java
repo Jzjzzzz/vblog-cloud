@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public R exceptionHandler(Exception e) {
         log.error(e.getMessage(), e);
-        return R.error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        return R.error(e.getMessage());
     }
 
     @ExceptionHandler(ArkAbstractException.class)

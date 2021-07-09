@@ -34,7 +34,7 @@ public class Article extends Domain {
     private String htmlContent;
     @ApiModelProperty("摘要")
     private String summary;
-    @ApiModelProperty("栏目ID")
+    @ApiModelProperty("分类ID")
     private Integer cid;
     @ApiModelProperty("作者ID")
     private Integer uid;
@@ -49,4 +49,7 @@ public class Article extends Domain {
     @TableField(exist = false)
     @ApiModelProperty(value = "作者映射实体, 非数据库表字段")
     private User author;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "分类映射实体, 非数据库表字段")
+    private Category category;
 }

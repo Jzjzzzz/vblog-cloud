@@ -133,15 +133,16 @@ export default {
     },
     login() {
       if (
-        this.formData.phone.toString().length === 11 &&
-        this.formData.code.toString().length >= 4
+        true
+        // this.formData.phone.toString().length === 11 &&
+        // this.formData.code.toString().length >= 4
       ) {
         this.loading = true
         const params = this.formData
         params.type = 'merchant'
         request({
-          url: '/merchant/merchant/login',
-          method: 'post',
+          url: '/article/list/1/10',
+          method: 'get',
           params
         }).then(
           response => {
@@ -330,7 +331,7 @@ cursor: pointer;
   text-align: center;
   border-radius: 20px;
   background-color: #fc0c1b;
-  
+
 }
 
 .bottomView {
