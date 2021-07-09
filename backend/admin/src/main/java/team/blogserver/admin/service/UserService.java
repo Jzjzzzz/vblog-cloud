@@ -1,47 +1,40 @@
 package team.blogserver.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import team.ark.core.exception.ArkServiceException;
 import team.blogserver.common.mapper.UserMapper;
-import team.blogserver.common.mapper.RolesUserMapper;
 import team.blogserver.common.model.domain.User;
-import team.blogserver.common.model.domain.RolesUser;
 
-import javax.annotation.Resource;
 
 /**
- * 用户Service
- *
- * @author Ashinch
- * @date 2021/02/05
+ * @author lshz
  */
 @Slf4j
 @Service
-public class UserService {
-    @Resource
-    private UserMapper userMapper;
-    @Resource
-    private RolesUserMapper rolesUserMapper;
+public class UserService extends ServiceImpl<UserMapper, User> {
 
-    @Transactional(rollbackFor = Exception.class)
-    public boolean insert() {
-        User user = new User();
-        user.setUsername("13630");
-        user.setPassword(new BCryptPasswordEncoder().encode("123"));
-        if (userMapper.insert(user) < 1) {
-            log.error("userMapper.insert(user) < 1: {}", user);
-            throw new ArkServiceException("注册失败");
-        }
-        RolesUser rolesUser = new RolesUser();
-        rolesUser.setUid(user.getId());
-        rolesUser.setRid(3);
-        if (rolesUserMapper.insert(rolesUser) < 1) {
-            log.error("userRoleMapper.insert(userRole) < 1: {}", rolesUser);
-            throw new ArkServiceException("注册失败");
-        }
+    public IPage<User> listPage(Page<User> pageParam) {
+        return baseMapper.selectPage(pageParam, null);
+    }
+
+    public IPage<User> listPage(Page<User> pageParam, String name) {
+        QueryWrapper<User> tagQueryWrapper = new QueryWrapper<>();
+        tagQueryWrapper
+                .like(StringUtils.isNotBlank(name), "nickname", name)
+                .or()
+                .like(StringUtils.isNotBlank(name), "username", name);
+        return baseMapper.selectPage(pageParam, tagQueryWrapper);
+    }
+
+    public boolean updateById(Long id) {
+        User user=baseMapper.selectById(id);
+        user.setEnabled( !user.getEnabled());
+        baseMapper.updateById(user);
         return true;
     }
 }

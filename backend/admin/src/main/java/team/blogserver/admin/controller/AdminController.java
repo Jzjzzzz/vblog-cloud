@@ -2,7 +2,6 @@ package team.blogserver.admin.controller;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.ark.core.cache.store.CacheStore;
@@ -21,10 +20,10 @@ public class AdminController {
     @Resource
     private CacheStore cacheStore;
 
-    @GetMapping("/add")
-    public R add() {
-        return R.ok(userService.insert());
-    }
+//    @GetMapping("/add")
+//    public R add() {
+//        return R.ok(userService.insert());
+//    }
 
     @GetMapping("/cache")
     public R cache() {
