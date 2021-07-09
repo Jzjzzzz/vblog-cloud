@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/config")
 @Api(value = "后台网站设置接口")
+@CrossOrigin //跨域
 public class WebConfigController {
     @Resource
     private WebConfigService webConfigService;

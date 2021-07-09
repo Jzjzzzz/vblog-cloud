@@ -1,9 +1,12 @@
 package team.blogserver.common.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
+import java.util.Date;
 
 /**
  * 标签Entity
@@ -22,4 +25,11 @@ public class Tags extends Domain {
     private static final long serialVersionUID = -1352705180502110346L;
     @ApiModelProperty("标签名")
     private String tagName;
+
+    @ApiModelProperty("排序字段")
+    private Integer sort;
+
+    @ApiModelProperty("创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date date;
 }

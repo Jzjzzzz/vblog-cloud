@@ -11,6 +11,7 @@ import team.blogserver.admin.service.TagsService;
 import team.blogserver.common.model.domain.Tags;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Jzj
@@ -20,21 +21,23 @@ import javax.annotation.Resource;
 @RestController
 @Api(value = "后台标签接口")
 @RequestMapping("/tags")
+@CrossOrigin //跨域
 public class TagsController {
     @Resource
     private TagsService tagsService;
 
     @ApiOperation("博客标签列表")
     @GetMapping("/list/{page}/{limit}")
-    public R list(@PathVariable Long page, @PathVariable Long limit) {
+    public R list(@PathVariable Long page, @PathVariable Long limit,String tagName) {
         Page<Tags> pageParam = new Page<>(page, limit);
-        IPage<Tags> listPage = tagsService.listPage(pageParam);
+        IPage<Tags> listPage = tagsService.listPage(pageParam,tagName);
         return R.ok(listPage);
     }
 
     @ApiOperation("新增博客标签")
     @PostMapping("/save")
     public R save(@RequestBody Tags tags) {
+        tags.setSort(0);
         boolean result = tagsService.save(tags);
         if (result) {
             return R.ok();
@@ -44,7 +47,7 @@ public class TagsController {
 
     @ApiOperation("删除博客标签")
     @DeleteMapping("/remove/{id}")
-    public R removeById(@PathVariable Long id) {
+    public R removeById(@PathVariable Integer id) {
         boolean result = tagsService.removeById(id);
         if (result) {
             return R.ok();
@@ -54,7 +57,7 @@ public class TagsController {
 
     @ApiOperation("根据ID查询博客标签")
     @GetMapping("/getById/{id}")
-    public R getById(@PathVariable Long id) {
+    public R getById(@PathVariable Integer id) {
         Tags model = tagsService.getById(id);
         if (model != null) {
             return R.ok(model);
@@ -70,5 +73,25 @@ public class TagsController {
             return R.ok();
         }
         return R.error("修改失败");
+    }
+
+    @ApiOperation("批量删除标签")
+    @PostMapping("/deleteBatch")
+    public R deleteBatch(@RequestBody List<Tags> tagList){
+        boolean result = tagsService.deleteBatchTag(tagList);
+        if(result){
+            return R.ok();
+        }
+        return R.error("批量删除失败");
+    }
+
+    @ApiOperation("根据id置顶博客标签")
+    @PutMapping("/stickyBlogById/{id}")
+    public R stickyBlogById(@PathVariable Integer id){
+        boolean result = tagsService.topBlogById(id);
+        if(result){
+            return R.ok();
+        }
+        return R.error("操作失败");
     }
 }

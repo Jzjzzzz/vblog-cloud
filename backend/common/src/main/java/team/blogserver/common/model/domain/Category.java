@@ -19,4 +19,7 @@ public class Category extends Domain {
     @ApiModelProperty("创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
+
+    @ApiModelProperty("排序字段")
+    private Integer sort;
 }
