@@ -1,6 +1,8 @@
 package team.blogserver.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Tag;
@@ -31,10 +33,12 @@ public class TagsController {
     private TagsService tagsService;
 
     @ApiOperation("博客标签列表")
-    @GetMapping("/list")
-    public R list(){
-        List<Tags> list = tagsService.list();
-        return R.ok(list);
+    @GetMapping("/list/{page}/{limit}")
+    public R list(@PathVariable Long page, @PathVariable Long limit){
+        Page<Tags> pageParam = new Page<>(page, limit);
+        IPage<Tags> listPage = tagsService.listPage(pageParam);
+
+        return R.ok(listPage);
     }
     @ApiOperation("新增博客标签")
     @PostMapping("/save")

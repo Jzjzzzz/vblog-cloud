@@ -1,5 +1,6 @@
 package team.blogserver.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,5 +20,7 @@ import javax.annotation.Resource;
 @Service
 @Slf4j
 public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
-
+    public IPage<Category> listPage(Page<Category> pageParam) {
+        return baseMapper.selectPage(pageParam, null);
+    }
 }

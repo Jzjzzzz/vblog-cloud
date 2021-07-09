@@ -30,10 +30,12 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @ApiOperation("博客分类列表")
-    @GetMapping("/list")
-    public R list(){
-        List<Category> list = categoryService.list();
-        return R.ok(list);
+    @GetMapping("/list/{page}/{limit}")
+    public R list(@PathVariable Long page, @PathVariable Long limit){
+        Page<Category> pageParam = new Page<>(page, limit);
+        IPage<Category> listPage = categoryService.listPage(pageParam);
+
+        return R.ok(listPage);
     }
     @ApiOperation("新增博客分类")
     @PostMapping("/save")
