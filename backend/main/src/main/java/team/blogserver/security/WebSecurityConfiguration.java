@@ -17,6 +17,8 @@ import team.ark.core.security.JwtUtils;
 import team.ark.core.util.WebUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import java.util.Arrays;
 
 /**
  * Spring Security配置
@@ -50,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // 登出成功处理器
                 .logoutSuccessHandler((request, response, authentication) -> {
                     SecurityContextHolder.clearContext();
-                    WebUtils.write(response, R.with(C.OK));
+                    WebUtils.write(response, R.ok());
                 }).and().csrf().disable().httpBasic()
                 // 未登录处理器
                 .authenticationEntryPoint((request, response, authenticationException) -> {
@@ -67,7 +69,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .successHandler((request, response, authentication) -> {
                     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
                     String token = JwtUtils.createAccessToken(userDetails);
-                    WebUtils.write(response, R.with(C.OK, token));
+                    WebUtils.write(response, R.ok(token));
                 })
                 // 登录失败处理器
                 .failureHandler((request, response, authenticationException) -> {

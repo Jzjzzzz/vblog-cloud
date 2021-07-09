@@ -42,7 +42,6 @@
             <el-button type="primary" @click.native.prevent="submitClick" style="width: 100%">一键登录</el-button>
           </el-form-item>
         </el-tab-pane>
-        </el-tab-pane>
       </el-tabs>
 
     </el-form>
@@ -53,10 +52,6 @@
   import {
     validUsername
   } from '@/utils/validate'
-  import request from '@/utils/request'
-  import { getInfo, login } from '@/api/user'
-  import { setToken } from '@/utils/auth'
-  import store from '@/store'
 
   export default {
     name: 'Login',
@@ -100,24 +95,15 @@
       submitClick: function() {
         var _this = this;
         this.loading = true;
-        login({
-          username: _this.loginForm.username,
-          password: _this.loginForm.password,
-        }).then(res => {
-          // 成功
-          // 设置Token
-          setToken(res.data)
-          // 拿用户信息
-          getInfo().then(res=>{
-            console.log('userinfo', res.data)
-          })
-          // 跳转
+        this.$store.dispatch('user/login', this.loginForm).then(() => {
+          // 成功跳转
           _this.$router.replace({
             path: '/dashboard'
           });
         }).catch(err => {
           // 失败
-          _this.$alert('失败!', err.message);
+          _this.$alert(err.message);
+          this.loading = false;
         });
       }
     }
