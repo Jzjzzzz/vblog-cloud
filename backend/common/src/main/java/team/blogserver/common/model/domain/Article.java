@@ -2,13 +2,11 @@ package team.blogserver.common.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.dreamyoung.mprelation.JoinColumn;
-import com.github.dreamyoung.mprelation.OneToMany;
-import com.github.dreamyoung.mprelation.OneToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
 
 import java.util.Date;
 
@@ -23,8 +21,9 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(value = {"handler"})
 @ApiModel(value = "Article", description = "文章实体类", parent = Domain.class)
-@TableName("article")
+@TableName(value = "article", resultMap = "mapping")
 public class Article extends Domain {
     private static final long serialVersionUID = 1552702441476476804L;
     @ApiModelProperty("标题")
@@ -47,9 +46,7 @@ public class Article extends Domain {
     private Integer state;
     @ApiModelProperty("阅读次数")
     private Integer pageView;
-    @OneToOne
     @TableField(exist = false)
-    @JoinColumn(name = "uid", referencedColumnName = "id")
-    @ApiModelProperty("作者ID")
+    @ApiModelProperty(value = "作者映射实体, 非数据库表字段")
     private User author;
 }
