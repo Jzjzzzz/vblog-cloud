@@ -43,6 +43,9 @@ public class User extends Domain {
     private String userface;
     @ApiModelProperty("注册时间")
     private String regTime;
+
+    @ApiModelProperty("手机号")
+    private String mobile;
     @TableField(exist = false)
     @ApiModelProperty(value = "角色映射实体, 非数据库表字段")
     private List<Roles> roles;

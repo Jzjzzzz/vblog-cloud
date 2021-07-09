@@ -20,5 +20,4 @@ import javax.annotation.Resource;
 @Slf4j
 public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
 
-
 }

@@ -54,3 +54,15 @@ aliyun:
     keyId: LTAI5tRYMRSF5FTUEn7HZHDR
     keySecret: CGboVCVQrXvUIh1Hhlx50zonZRQpv8
     bucketName: vblog-jzj
+
+#腾讯云短信
+tengxun:
+  sms:
+    secretId: AKIDRo9DzWytymLBn9bSGo4rQkuxpRnsxRXF
+    secretKey: RgfOq45rOo3N3Td3j8HDuMZeeT3NRIce
+    #短信应用 ID
+    appid: 1400511329
+    #短信签名内容
+    sign: Jzj的java学习之路
+    #短信模板ID
+    templateID: 929971
