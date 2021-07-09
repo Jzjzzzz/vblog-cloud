@@ -1,6 +1,5 @@
 package team.blogserver.admin.service;
 
-
 import cn.hutool.core.date.DateTime;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -11,9 +10,7 @@ import team.ark.core.oss.OssProperties;
 import java.io.InputStream;
 import java.util.UUID;
 
-
 /**
- *
  * @author Jzj
  * @date 2021/07/08
  */
@@ -29,7 +26,7 @@ public class FileService {
                 OssProperties.KEY_ID,
                 OssProperties.KEY_SECRET);
         //判断oss实例是否存在：如果不存在则创建，如果存在则获取
-        if(!ossClient.doesBucketExist(OssProperties.BUCKET_NAME)){
+        if (!ossClient.doesBucketExist(OssProperties.BUCKET_NAME)) {
             //创建bucket
             ossClient.createBucket(OssProperties.BUCKET_NAME);
             //设置oss实例的访问权限：公共读
@@ -51,6 +48,7 @@ public class FileService {
 
     /**
      * 根据路径删除文件
+     *
      * @param url
      */
     public void removeFile(String url) {

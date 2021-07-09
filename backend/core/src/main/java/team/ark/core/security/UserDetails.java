@@ -29,23 +29,23 @@ public class UserDetails implements IUserDetails {
     }
 
     @Override
-    public void setId(Object id) {
-        this.id = id;
-    }
-
-    @Override
     public Object getId() {
         return id;
     }
 
     @Override
-    public void setUsername(Object subject) {
-        username = subject;
+    public void setId(Object id) {
+        this.id = id;
     }
 
     @Override
     public String getUsername() {
         return String.valueOf(username);
+    }
+
+    @Override
+    public void setUsername(Object subject) {
+        username = subject;
     }
 
     /**

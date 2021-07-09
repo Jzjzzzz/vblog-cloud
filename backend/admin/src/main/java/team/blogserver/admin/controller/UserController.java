@@ -25,9 +25,11 @@ public class UserController {
 
     /**
      * 查询用户列表
-     * @param page 当前页
+     *
+     * @param page  当前页
      * @param limit 每页显示数
      * @param name  输入用户名或者昵称查找
+     *
      * @return 用户列表
      */
     @ApiOperation(value = "用户列表", notes = "传name既是根据用户名或者昵称模糊查找，为空则查全部")
@@ -40,20 +42,22 @@ public class UserController {
 
     /**
      * 删除用户
-     * @param id  用户ID
+     *
+     * @param id 用户ID
      */
     @ApiOperation("删除用户")
     @DeleteMapping("/remove/{id}")
     public R removeById(@PathVariable Long id) {
         boolean result = userService.removeById(id);
         if (result) {
-            return R.ok(null);
+            return R.ok();
         }
         return R.error("删除失败");
     }
 
     /**
      * 禁用或启用用户
+     *
      * @param id 用户id
      */
     @ApiOperation("禁用或启用用户")
@@ -61,21 +65,22 @@ public class UserController {
     public R updateById(@PathVariable Long id) {
         boolean result = userService.updateById(id);
         if (result) {
-            return R.ok(null);
+            return R.ok();
         }
         return R.error("禁用失败");
     }
 
     /**
      * 新增用户
+     *
      * @param user 用户实体类
      */
     @ApiOperation("新增用户")
     @PostMapping("/save")
-    public R save(@RequestBody User user){
+    public R save(@RequestBody User user) {
         boolean result = userService.save(user);
-        if(result){
-            return R.ok(null);
+        if (result) {
+            return R.ok();
         }
         return R.error("新增失败");
     }

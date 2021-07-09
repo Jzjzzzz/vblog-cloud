@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import team.ark.core.util.BeanUtil;
-import team.blogserver.common.mapper.UserMapper;
 import team.blogserver.common.mapper.RolesUserMapper;
+import team.blogserver.common.mapper.UserMapper;
 import team.blogserver.common.model.domain.User;
 
 import javax.annotation.Resource;

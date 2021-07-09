@@ -5,10 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import team.ark.core.response.C;
-import team.ark.core.response.R;
 import team.ark.core.util.SpringUtils;
-import team.ark.core.util.WebUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

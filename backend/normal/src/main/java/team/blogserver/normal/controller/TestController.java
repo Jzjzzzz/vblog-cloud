@@ -48,7 +48,7 @@ public class TestController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth")
     public R auth() {
-        return R.ok(null);
+        return R.ok();
     }
 
     @PostMapping("/raw")

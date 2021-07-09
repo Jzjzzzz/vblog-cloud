@@ -13,9 +13,7 @@ import java.util.Random;
  */
 public class RandomUtils {
     private static final Random random = new Random();
-
     private static final DecimalFormat fourdf = new DecimalFormat("0000");
-
     private static final DecimalFormat sixdf = new DecimalFormat("000000");
 
     public static String getFourBitRandom() {
@@ -28,29 +26,23 @@ public class RandomUtils {
 
     /**
      * 给定数组，抽取n个数据
+     *
      * @param list
      * @param n
+     *
      * @return
      */
     public static ArrayList getRandom(List list, int n) {
-
         Random random = new Random();
-
         HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
-
         // 生成随机数字并存入HashMap
         for (int i = 0; i < list.size(); i++) {
-
             int number = random.nextInt(100) + 1;
-
             hashMap.put(number, i);
         }
-
         // 从HashMap导入数组
         Object[] robjs = hashMap.values().toArray();
-
         ArrayList r = new ArrayList();
-
         // 遍历数组并打印数据
         for (int i = 0; i < n; i++) {
             r.add(list.get((int) robjs[i]));

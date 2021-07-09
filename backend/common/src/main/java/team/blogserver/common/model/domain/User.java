@@ -2,13 +2,11 @@ package team.blogserver.common.model.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
 
 import java.util.List;
 
@@ -43,7 +41,6 @@ public class User extends Domain {
     private String userface;
     @ApiModelProperty("注册时间")
     private String regTime;
-
     @ApiModelProperty("手机号")
     private String mobile;
     @TableField(exist = false)

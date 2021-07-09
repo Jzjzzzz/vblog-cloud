@@ -5,7 +5,7 @@ spring:
     name: blogserver
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource    # 配置当前要使用的数据源的操作类型
-    dbcp2:                                          # 进行数据库连接池的配置
+    dbcp2: # 进行数据库连接池的配置
       min-idle: 10                                  # 数据库连接池的最小维持连接数
       initial-size: 20                              # 初始化提供的连接数
       max-total: 50                                 # 最大的连接数

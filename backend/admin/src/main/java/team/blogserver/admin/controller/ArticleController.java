@@ -1,22 +1,17 @@
 package team.blogserver.admin.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import team.ark.core.response.R;
 import team.ark.core.security.JwtUtils;
 import team.blogserver.admin.service.ArticleService;
 import team.blogserver.common.model.domain.Article;
-import team.blogserver.common.model.domain.User;
 
-import javax.annotation.Nullable;
 import javax.annotation.Resource;
-import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -69,6 +64,7 @@ public class ArticleController {
      */
     @ApiOperation("根据ID删除文章")
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('超级管理员')")  //TODO: 临时测试权限
     public R delete(@PathVariable Integer id) {
         Article article = new Article();
         article.setId(id);
@@ -77,9 +73,37 @@ public class ArticleController {
     }
 
     /**
+     * 设置文章状态为草稿箱
+     *
+     * @param id 文章ID
+     */
+    @ApiOperation("根据ID设置文章状态为草稿")
+    @PutMapping("/drafts/{id}")
+    public R drafts(@PathVariable Integer id) {
+        Article article = new Article();
+        article.setId(id);
+        article.setState(0);
+        return R.judge(articleService.updateById(article));
+    }
+
+    /**
+     * 设置文章状态为已发表
+     *
+     * @param id 文章ID
+     */
+    @ApiOperation("根据ID设置文章状态为已发表")
+    @PutMapping("/publish/{id}")
+    public R publish(@PathVariable Integer id) {
+        Article article = new Article();
+        article.setId(id);
+        article.setState(1);
+        return R.judge(articleService.updateById(article));
+    }
+
+    /**
      * 添加文章
      */
-    @ApiOperation(value = "添加文章（需登录）",notes = "不需要传id, uid, publishDate, editTime, 以当前登录的用户身份添加文章")
+    @ApiOperation(value = "添加文章（需登录）", notes = "不需要传id, uid, publishDate, editTime, 以当前登录的用户身份添加文章")
     @PostMapping("/add")
     public R add(@RequestBody Article article) {
         article.setUid(JwtUtils.<Integer>getId());

@@ -27,7 +27,6 @@ public enum C {
     ACCESS_DENIED(2002, "权限不足"),
     USER_NOT_FOUND(2003, "用户不存在"),
     BAD_CREDENTIALS(2004, "用户名或密码错误"),
-
     ;
     /**
      * 响应码

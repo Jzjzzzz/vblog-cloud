@@ -12,11 +12,9 @@ import team.blogserver.common.model.domain.WebConfig;
 import javax.annotation.Resource;
 
 /**
- *
  * @author Jzj
  * @date 2021/07/08
  */
-
 @Slf4j
 @RestController
 @RequestMapping("/config")
@@ -27,17 +25,17 @@ public class WebConfigController {
 
     @ApiOperation("获取网站配置")
     @GetMapping("/getWebConfig")
-    public R getWebConfig(){
+    public R getWebConfig() {
         WebConfig webConfig = webConfigService.getWebConfig();
         return R.ok(webConfig);
     }
 
     @ApiOperation("修改网站配置")
     @PutMapping("/editWebConfig")
-    public R editWebConfig(@RequestBody WebConfig webConfig){
+    public R editWebConfig(@RequestBody WebConfig webConfig) {
         boolean result = webConfigService.updateById(webConfig);
         Assert.notNull(result, "修改失败");
-        return R.ok(null);
+        return R.ok();
     }
 
 

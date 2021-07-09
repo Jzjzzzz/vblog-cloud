@@ -44,6 +44,12 @@ public class R<T> implements Serializable {
         return r;
     }
 
+    public static <T> R<T> ok() {
+        R<T> r = with(C.OK);
+        r.setData(null);
+        return r;
+    }
+
     public static <T> R<T> ok(T data) {
         R<T> r = with(C.OK);
         r.setData(data);

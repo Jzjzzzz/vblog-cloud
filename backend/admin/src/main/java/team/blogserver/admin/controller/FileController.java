@@ -1,6 +1,5 @@
 package team.blogserver.admin.controller;
 
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
  * @author Jzj
  * @date 2021/07/08
  */
@@ -56,6 +54,6 @@ public class FileController {
             @ApiParam(value = "要删除的文件路径", required = true)
             @RequestParam("url") String url) {
         fileService.removeFile(url);
-        return R.ok(null);
+        return R.ok();
     }
 }

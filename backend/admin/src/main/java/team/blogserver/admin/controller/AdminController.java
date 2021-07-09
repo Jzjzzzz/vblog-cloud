@@ -19,7 +19,6 @@ public class AdminController {
     private UserService userService;
     @Resource
     private CacheStore cacheStore;
-
 //    @GetMapping("/add")
 //    public R add() {
 //        return R.ok(userService.insert());
@@ -28,7 +27,7 @@ public class AdminController {
     @GetMapping("/cache")
     public R cache() {
         if (cacheStore.isExist("cache")) {
-            return R.ok(null);
+            return R.ok();
         } else {
             cacheStore.put("cache", 1);
             return R.error(null);

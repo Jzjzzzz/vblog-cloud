@@ -23,11 +23,6 @@ import java.util.Map;
 public class SpringUtils implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        SpringUtils.applicationContext = applicationContext;
-    }
-
     /**
      * 获取ApplicationContext
      *
@@ -35,6 +30,11 @@ public class SpringUtils implements ApplicationContextAware {
      */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        SpringUtils.applicationContext = applicationContext;
     }
 
     /**

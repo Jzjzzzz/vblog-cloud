@@ -5,7 +5,6 @@ import org.springframework.lang.NonNull;
 import team.ark.core.util.StringUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

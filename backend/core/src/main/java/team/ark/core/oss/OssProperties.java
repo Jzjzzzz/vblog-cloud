@@ -7,24 +7,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author Jzj
  * @date 2021/07/08
  */
-
 @Setter
 @Getter
 @Component
 @ConfigurationProperties(prefix = "aliyun.oss")
 public class OssProperties implements InitializingBean {
-    private String endpoint;
-    private String keyId;
-    private String keySecret;
-    private String bucketName;
     public static String ENDPOINT;
     public static String KEY_ID;
     public static String KEY_SECRET;
     public static String BUCKET_NAME;
+    private String endpoint;
+    private String keyId;
+    private String keySecret;
+    private String bucketName;
 
     //当私有成员被赋值后，此方法自动被调用，从而初始化常量
     @Override
