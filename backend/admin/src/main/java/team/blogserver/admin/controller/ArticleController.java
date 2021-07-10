@@ -1,6 +1,7 @@
 package team.blogserver.admin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import team.ark.core.response.R;
 import team.blogserver.admin.service.ArticleService;
 import team.blogserver.admin.service.CategoryService;
+import team.blogserver.common.mapper.ArticleTagsMapper;
 import team.blogserver.common.model.domain.Article;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * 文章控制器
@@ -29,6 +32,8 @@ public class ArticleController {
     private ArticleService articleService;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private ArticleTagsMapper articleTagsMapper;
 
     /**
      * 获取所有文章
@@ -76,6 +81,9 @@ public class ArticleController {
     @ApiOperation(value = "更新文章", notes = "文章ID必需，其他传什么就会更新什么，不想更新的字段切记传null或者不传")
     @PutMapping("/update")
     public R update(@RequestBody Article article) {
+        HashMap<String, Object> map = Maps.newHashMap();
+        map.put("aid", article.getId());
+        articleTagsMapper.deleteByMap(map);
         return R.judge(articleService.updateById(article));
     }
 
