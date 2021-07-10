@@ -5,7 +5,7 @@
       <el-form-item label="标签名">
         <el-input v-model="tagName" placeholder="标签名" />
       </el-form-item>
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()">
+      <el-button type="primary" icon="el-icon-search" @click="fetchData1()">
         查询
       </el-button>
       <el-button
@@ -180,6 +180,13 @@ export default {
     fetchData() {
       // 调用api
       tagApi.list(this.page, this.limit, this.tagName).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
+      })
+    },
+    fetchData1() {
+      // 调用api
+      tagApi.list(1, this.limit, this.tagName).then(response => {
         this.list = response.data.records
         this.total = response.data.total
       })

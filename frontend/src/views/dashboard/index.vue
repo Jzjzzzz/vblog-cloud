@@ -13,7 +13,7 @@
             <count-to
               :start-val="0"
               :end-val="102400"
-              :duration="2600"
+              :duration="3000"
               class="card-panel-num"
             />
           </div>
@@ -30,7 +30,7 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="81212"
+              :end-val="aCount"
               :duration="3000"
               class="card-panel-num"
             />
@@ -44,12 +44,12 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              总回复量
+              总标签数
             </div>
             <count-to
               :start-val="0"
-              :end-val="9280"
-              :duration="3200"
+              :end-val="tCount"
+              :duration="3000"
               class="card-panel-num"
             />
           </div>
@@ -66,8 +66,8 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="13600"
-              :duration="3600"
+              :end-val="pvCount"
+              :duration="3000"
               class="card-panel-num"
             />
           </div>
@@ -78,28 +78,58 @@
 </template>
 
 <script>
+import tagApi from '@/api/core/tag'
+import genreApi from '@/api/core/genre'
+import blogApi from '@/api/core/blog'
 import { mapGetters } from 'vuex'
 import countTo from 'vue-count-to'
 import { list } from '@/api/article'
 export default {
-
   name: 'Dashboard',
   components: { countTo },
+  data() {
+    return {
+      everyCount: '',
+      uCount: '', // 用户数
+      aCount: '', // 文章数
+      tCount: '', // 标签数
+      pvCount: '' // 浏览数
+    }
+  },
   computed: {
     ...mapGetters(['name', 'roles'])
   },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
-    }
-  },
   created() {
+    this.fetchData()
     // 测试任意接口带token请求
-    list(1,10, '').then(res => {
+    list(1, 10, '').then(res => {
       console.log('article list', res)
     }).catch(err => {
       console.error(err)
     })
+  },
+  methods: {
+    fetchData() {
+      this.gettCount()
+      this.getaCount()
+      this.getpvCount()
+    },
+    gettCount() {
+      tagApi.list(1, 1, '').then(response => {
+        this.tCount = response.data.total
+      })
+    },
+    getaCount() {
+      genreApi.list(1, 1, '').then(response => {
+        this.aCount = response.data.total
+      })
+    },
+    getpvCount() {
+      this.pvCount = 100
+    },
+    handleSetLineChartData(type) {
+      this.$emit('handleSetLineChartData', type)
+    }
   }
 }
 </script>
