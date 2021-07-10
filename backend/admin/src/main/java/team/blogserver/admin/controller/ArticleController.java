@@ -3,6 +3,7 @@ package team.blogserver.admin.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,26 @@ public class ArticleController {
     @GetMapping("/list/{page}/{limit}")
     public R list(@PathVariable Long page, @PathVariable Long limit, String title) {
         return R.judge(articleService.listPage(new Page<>(page, limit), title));
+    }
+
+    /**
+     * 根据文章状态筛选所有文章
+     */
+    @ApiOperation("根据文章状态筛选所有文章（不含详情）")
+    @GetMapping("/listByState/{page}/{limit}/{state}")
+    public R listByState(@PathVariable Long page, @PathVariable Long limit,
+                         @PathVariable Integer state) {
+        return R.judge(articleService.listPageByState(new Page<>(page, limit), state));
+    }
+
+    /**
+     * 获取所有文章（倒序排序）
+     */
+    @ApiOperation("获取所有文章（倒序排序, 不含详情）")
+    @GetMapping("/listOrderByDESC/{page}/{limit}/{field}")
+    public R listOrderByDESC(@PathVariable Long page, @PathVariable Long limit,
+                             @PathVariable String field) {
+        return R.judge(articleService.listPageOrderByDESC(new Page<>(page, limit), field));
     }
 
     /**

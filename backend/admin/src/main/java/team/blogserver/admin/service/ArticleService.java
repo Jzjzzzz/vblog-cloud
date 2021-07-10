@@ -35,6 +35,18 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
                 .like(StringUtils.isNotBlank(title), "title", title));
     }
 
+    public IPage<Article> listPageByState(Page<Article> pageParam, Integer state) {
+        return baseMapper.selectPage(pageParam, new QueryWrapper<Article>()
+                .select(Article.class, i -> !i.getProperty().endsWith("Content"))
+                .eq(state != null, "state", state));
+    }
+
+    public IPage<Article> listPageOrderByDESC(Page<Article> pageParam, String field) {
+        return baseMapper.selectPage(pageParam, new QueryWrapper<Article>()
+                .select(Article.class, i -> !i.getProperty().endsWith("Content"))
+                .orderByDesc(field));
+    }
+
     public boolean addArticleTags(Article article) {
         article.setUid(JwtUtils.<Integer>getId());
         article.setPublishDate(new Date());
