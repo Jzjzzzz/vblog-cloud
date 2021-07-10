@@ -5,7 +5,7 @@
       <el-form-item label="博客标题">
         <el-input v-model="title" placeholder="博客标题" />
       </el-form-item>
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()">
+      <el-button type="primary" icon="el-icon-search" @click="fetchData1()">
         查询
       </el-button>
       <el-button
@@ -26,27 +26,17 @@
       <el-table-column type="index" width="50" align="center" />
       <el-table-column prop="title" label="博客标题" align="center" />
       <el-table-column prop="author.nickname" label="作者" align="center" />
-<!--      <el-table-column prop="fileId" label="博客图片" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-image-->
-<!--            style="width: 100px; height: 100px"-->
-<!--            :src="scope.row.fileId"-->
-<!--            :preview-src-list="srcList"-->
-<!--            @click="srclistBig(scope.row.fileId)"-->
-<!--          />-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column prop="category" label="博客分类" align="center">
         <template slot-scope="scope">
 
           <el-tag type="success">{{ scope.row.category.cateName }}</el-tag>
         </template>
       </el-table-column>
-<!--      <el-table-column prop="tagName" label="博客标签" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-tag effect="plain">{{ scope.row.tagName }}</el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column prop="tagName" label="博客标签" align="center">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-tag effect="plain">{{ scope.row.tagName }}</el-tag>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column prop="pageView" label="博客点击数" align="center" />
       <el-table-column prop="publishDate" label="创建时间" align="center" />
       <el-table-column prop="editTime" label="修改时间" align="center" />
@@ -125,25 +115,7 @@
               <el-input v-model="form.summary" type="textarea" />
             </el-form-item>
           </el-col>
-<!--          <el-col style="margin-left:40px" :span="6">-->
-<!--            <el-form-item label="标题图">-->
-<!--              <el-upload-->
-<!--                :class="{ hide: hideUpload }"-->
-<!--                :action="handleBeforeUploadImg()"-->
-<!--                :on-success="onUploadSuccessImg"-->
-<!--                :on-remove="onUploadRemove"-->
-<!--                :on-preview="handlePictureCardPreview"-->
-<!--                :on-change="handleChange"-->
-<!--                :multiple="false"-->
-<!--                :data="{ module: 'blogTitleImg' }"-->
-<!--                :limit="1"-->
-<!--                :file-list="fileListurl"-->
-<!--                list-type="picture-card"-->
-<!--              >-->
-<!--                <i class="el-icon-plus" />-->
-<!--              </el-upload>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
+
         </el-row>
 
         <el-row>
@@ -170,9 +142,9 @@
           </el-col>
 
           <el-col :span="4">
-            <el-form-item label="标签" label-width="80px" prop="tagId">
+            <el-form-item label="标签" label-width="80px" prop="tags">
               <el-select
-                v-model="form.tagId"
+                v-model="form.tags"
                 multiple
                 size="small"
                 placeholder="请选择"
@@ -187,88 +159,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-<!--          <el-col :span="4">-->
-<!--            <el-form-item label="推荐等级" prop="level">-->
-<!--              <el-select v-model="form.level" size="small" placeholder="请选择">-->
-<!--                <el-option-->
-<!--                  v-for="item in starsDict"-->
-<!--                  :key="item.id"-->
-<!--                  :label="item.name"-->
-<!--                  :value="item.value"-->
-<!--                />-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
+
         </el-row>
-<!--        <el-row>-->
-<!--          <el-col :span="4">-->
-<!--            <el-form-item-->
-<!--              label="是否原创"-->
-<!--              :label-width="formLabelWidth"-->
-<!--              prop="original"-->
-<!--            >-->
-<!--              <el-radio-group v-model="form.original" size="small">-->
-<!--                <el-radio-->
-<!--                  v-for="item in orderList"-->
-<!--                  :key="item.id"-->
-<!--                  :label="item.value"-->
-<!--                  border-->
-<!--                >-->
-<!--                  {{ item.name }}-->
-<!--                </el-radio>-->
-<!--              </el-radio-group>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--          <el-col :span="5">-->
-<!--            <el-form-item-->
-<!--              label="文章评论"-->
-<!--              :label-width="formLabelWidth"-->
-<!--              prop="openComment"-->
-<!--            >-->
-<!--              <el-radio-group v-model="form.openComment" size="small">-->
-<!--                <el-radio-->
-<!--                  v-for="item in commentList"-->
-<!--                  :key="item.id"-->
-<!--                  :label="item.value"-->
-<!--                  border-->
-<!--                >-->
-<!--                  {{ item.name }}-->
-<!--                </el-radio>-->
-<!--              </el-radio-group>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--          <el-col :span="5">-->
-<!--            <el-form-item label="是否发布" prop="status">-->
-<!--              <el-radio-group v-model="form.status" size="small">-->
-<!--                <el-radio-->
-<!--                  v-for="item in dataList"-->
-<!--                  :key="item.id"-->
-<!--                  :label="item.value"-->
-<!--                  border-->
-<!--                >-->
-<!--                  {{ item.name }}-->
-<!--                </el-radio>-->
-<!--              </el-radio-group>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
-<!--        <el-form-item-->
-<!--          v-if="form.original == 2"-->
-<!--          label="作者"-->
-<!--          :label-width="formLabelWidth"-->
-<!--          prop="author"-->
-<!--        >-->
-<!--          <el-input v-model="form.author" />-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item-->
-<!--          v-if="form.original == 2"-->
-<!--          label="文章出处"-->
-<!--          :label-width="formLabelWidth"-->
-<!--        >-->
-<!--          <el-input v-model="form.articlesPart" />-->
-<!--        </el-form-item>-->
-
         <el-form-item label="内容" :label-width="formLabelWidth" prop="mdContent">
           <mavon-editor v-model="form.mdContent" />
         </el-form-item>
@@ -313,7 +205,7 @@ export default {
         cid: [
           { required: true, message: '分类不能为空', trigger: 'blur' }
         ],
-        tagId: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
+        tags: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
         original: [
           { required: true, message: '是否原创不能为空', trigger: 'blur' }
         ],
@@ -353,20 +245,12 @@ export default {
         this.form = response.data
         // 表单数据类型转换
         // var tag = new Array()
-        // tag = this.form.tagId.split(',')
+        // tag = this.form.tags.split(',')
         // tag = tag.map(function(data) {
         //   return +data
         // })
-        // this.form.tagId = tag
-        // this.form.tagId = tag
-        // this.form.original = this.form.original == true ? 1 : 2
-        // this.form.openComment = this.form.openComment == true ? 1 : 2
+        // this.form.tags = tag
         this.form.cid = response.data.category.id
-        // this.fileListurl.push({
-        //   name: 'blogTitleImg',
-        //   url: this.form.fileId
-        // })
-        // this.fileList = 1
       })
     },
     // 根据id删除数据
@@ -411,14 +295,20 @@ export default {
           console.log('校验出错')
         } else {
           if (this.form.id != null) {
-            this.form.tagId = this.form.tagId.toString()
+            this.form.tags = this.form.tags.toString()
             blogApi.updateById(this.form).then(response => {
               this.dialogFormVisible = false
               this.$message.success(response.message)
               this.fetchData()
             })
           } else {
-            this.form.tagId = this.form.tagId.toString()
+            let tags = []
+            this.form.tags.toString().split(',').map(value => {
+              tags.push({ id: value })
+            })
+            console.log(tags)
+            Object.assign(this.form.tags, tags)
+            console.log(this.form)
             blogApi.save(this.form).then(response => {
               this.dialogFormVisible = false
               this.$message.success(response.message)
@@ -479,14 +369,14 @@ export default {
         this.list = response.data.records
         this.total = response.data.total
       })
-      // 获取字典数据
-      // blogApi.dict().then(response => {
-      //   this.starsDict = response.data.dict.starsList
-      //   this.orderList = response.data.dict.orderList
-      //   this.commentList = response.data.dict.commentList
-      //   this.dataList = response.data.dict.dataList
-      // })
+    },
+    fetchData1() {
+      blogApi.list(1, this.limit, this.title).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
+      })
     }
+
   }
 }
 </script>

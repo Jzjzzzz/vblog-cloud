@@ -7,13 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import team.ark.core.response.R;
-import team.ark.core.security.JwtUtils;
 import team.blogserver.admin.service.ArticleService;
 import team.blogserver.admin.service.CategoryService;
 import team.blogserver.common.model.domain.Article;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * 文章控制器
@@ -109,10 +107,7 @@ public class ArticleController {
     @ApiOperation(value = "添加文章（需登录）", notes = "不需要传id, uid, publishDate, editTime, 以当前登录的用户身份添加文章")
     @PostMapping("/add")
     public R add(@RequestBody Article article) {
-        article.setUid(JwtUtils.<Integer>getId());
-        article.setPublishDate(new Date());
-        article.setEditTime(new Date());
-        return R.judge(articleService.save(article));
+        return R.judge(articleService.addArticleTags(article));
     }
 
     /**

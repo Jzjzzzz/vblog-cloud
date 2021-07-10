@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import team.ark.core.security.JwtUtils;
 import team.blogserver.common.mapper.ArticleMapper;
 import team.blogserver.common.mapper.ArticleTagsMapper;
 import team.blogserver.common.model.domain.Article;
 import team.blogserver.common.model.domain.ArticleTags;
+import team.blogserver.common.model.domain.Tags;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * 文章服务
@@ -25,9 +28,24 @@ import javax.annotation.Resource;
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Resource
     ArticleTagsMapper articleTagsMapper;
+
     public IPage<Article> listPage(Page<Article> pageParam, String title) {
         return baseMapper.selectPage(pageParam, new QueryWrapper<Article>()
                 .select(Article.class, i -> !i.getProperty().endsWith("Content"))
                 .like(StringUtils.isNotBlank(title), "title", title));
     }
+
+    public boolean addArticleTags(Article article) {
+        article.setUid(JwtUtils.<Integer>getId());
+        article.setPublishDate(new Date());
+        article.setEditTime(new Date());
+        baseMapper.insert(article);
+        for (Tags tags : article.getTags()) {
+            if (articleTagsMapper.insert(new ArticleTags(article.getId(), tags.getId())) < 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

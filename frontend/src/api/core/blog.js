@@ -27,13 +27,6 @@ export default {
       params: { title: title }
     })
   },
-  ulist(page, limit, title) {
-    return request({
-      url: `/user/list/${page}/${limit}`,
-      method: 'get',
-      params: { name: title }
-    })
-  },
   removeById(id) {
     return request({
       url: `/article/delete/${id}`,
