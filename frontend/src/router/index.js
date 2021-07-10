@@ -114,6 +114,12 @@ export const constantRoutes = [
         meta: { title: '站点配置' }
       },
       {
+        path: 'system/journal',
+        name: '日志管理',
+        component: () => import('@/views/core/system/journal'),
+        meta: { title: '日志管理' }
+      },
+      {
         path: 'system/dict',
         name: '数据字典',
         component: () => import('@/views/core/system/dict'),

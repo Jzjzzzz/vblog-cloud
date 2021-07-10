@@ -51,5 +51,12 @@ export default {
       method: 'put',
       data: blog
     })
+  },
+  getAllPageView() {
+    return request({
+      url: '/article/getAllPageView',
+      method: 'get'
+    })
   }
+
 }

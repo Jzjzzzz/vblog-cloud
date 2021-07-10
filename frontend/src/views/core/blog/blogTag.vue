@@ -39,6 +39,16 @@
       <el-table-column type="selection" />
       <el-table-column type="index" width="50" align="center" />
       <el-table-column prop="tagName" label="博客标签名称" align="center" />
+      <el-table-column
+        width="100"
+        align="center"
+        prop='sort'
+        label="置顶"
+      >
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="date" label="创建时间" align="center" />
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">

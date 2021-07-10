@@ -12,7 +12,7 @@
             </div>
             <count-to
               :start-val="0"
-              :end-val="102400"
+              :end-val="uCount"
               :duration="3000"
               class="card-panel-num"
             />
@@ -81,6 +81,7 @@
 import tagApi from '@/api/core/tag'
 import genreApi from '@/api/core/genre'
 import blogApi from '@/api/core/blog'
+import { getUserList } from '@/api/user'
 import { mapGetters } from 'vuex'
 import countTo from 'vue-count-to'
 import { list } from '@/api/article'
@@ -89,7 +90,6 @@ export default {
   components: { countTo },
   data() {
     return {
-      everyCount: '',
       uCount: '', // 用户数
       aCount: '', // 文章数
       tCount: '', // 标签数
@@ -110,9 +110,15 @@ export default {
   },
   methods: {
     fetchData() {
+      this.getuCount()
       this.gettCount()
       this.getaCount()
       this.getpvCount()
+    },
+    getuCount() {
+      getUserList(1, 1, '').then(response => {
+        this.uCount = response.data.total
+      })
     },
     gettCount() {
       tagApi.list(1, 1, '').then(response => {
@@ -125,7 +131,9 @@ export default {
       })
     },
     getpvCount() {
-      this.pvCount = 100
+      blogApi.getAllPageView().then(response => {
+        this.pvCount = response.data
+      })
     },
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)

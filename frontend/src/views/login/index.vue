@@ -17,7 +17,7 @@
       </div>
     </div>
     <el-form v-loading="loading" :rules="rules" class="login-container" label-position="left" label-width="0px">
-      <h3 class="login_title">系统登录</h3>
+      <h3 class="login_title">{{WebName}}</h3>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="密码登录" name="first">
           <el-form-item prop="account">
@@ -59,12 +59,14 @@
 import {
   validUsername
 } from '@/utils/validate'
-import { send } from '@/api/user'
+import { getUserList , send} from '@/api/user'
+import webConfigApi from '@/api/core/webConfig'
 
 export default {
   name: 'Login',
   data() {
     return {
+      WebName: '',
       rules: {
         account: [{
           required: true,
@@ -99,7 +101,16 @@ export default {
       immediate: true
     }
   },
+  created() {
+    this.getWebName()
+  },
   methods: {
+    getWebName() {
+      webConfigApi.getWebConfig().then(response => {
+        console.log(response.data)
+        this.WebName = response.data.name
+      })
+    },
     // 发短信
     sendBtn() {
       if (!this.loginForm.mobile) {
@@ -134,7 +145,6 @@ export default {
         }
       }, 1000)
     },
-
     handleClick(tab, event) {
       console.log(tab, event)
     },
