@@ -23,7 +23,7 @@
         </el-select> 
       </el-form-item>-->
 
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()">
+      <el-button type="primary" icon="el-icon-search" @click="fetchData2()">
         查询
       </el-button>
       <el-button
@@ -172,7 +172,7 @@
 </template>
 <script>
 import genreApi from '@/api/core/genre'
-import util from '@/utils/index'
+
 export default {
   // 定义数据模型
   data() {
@@ -195,7 +195,7 @@ export default {
         ],
         // status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
         sort: [
-          { required: true, message: '排序字段不能为空', trigger: 'blur' },
+          // { required: true, message: '排序字段不能为空', trigger: 'blur' },
           { pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数' }
         ]
       }
@@ -254,14 +254,19 @@ export default {
         this.list = response.data.records
         this.total = response.data.total
       });
-
-
       // this.itemKey = Math.random();
       // console.log(this.list);
       // 字典数据
       // genreApi.dict().then(response => {
       //   this.dict = response.data.dict
       // })
+    },
+     fetchData2() {
+      // 调用api
+      genreApi.list(1, this.limit, this.searchObj).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
+      });
     },
     // 根据id置顶数据
     stickyBlogById(id) {
