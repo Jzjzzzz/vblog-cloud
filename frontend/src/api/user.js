@@ -22,24 +22,32 @@ export function logout() {
     })
 }
 
-export function getUserList(page,limit,name) {
-  return request({
-    url: `/user/list/${page}/${limit}`,
-    method: 'get',
-    params: { name: name }
-  })
+export function getUserList(page, limit, name) {
+    return request({
+        url: `/user/list/${page}/${limit}`,
+        method: 'get',
+        params: { name: name }
+    })
 }
 
 export function deleteRequest(id) {
-  return request({
-    url: `/user/remove/${id}`,
-    method: 'DELETE'
-  })
+    return request({
+        url: `/user/remove/${id}`,
+        method: 'DELETE'
+    })
 }
 
 export function userEnabled(id) {
-  return request({
-    url: `/user/update/${id}`,
-    method: 'PUT'
-  })
+    return request({
+        url: `/user/update/${id}`,
+        method: 'PUT'
+    })
+}
+
+export function saveUser(data) {
+    return request({
+        url: "/user/save",
+        method: 'POST',
+        data
+    })
 }
