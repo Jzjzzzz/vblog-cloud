@@ -29,7 +29,7 @@ public class Tags extends Domain {
     @ApiModelProperty("排序字段")
     private Integer sort;
 
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     @ApiModelProperty("创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
 }

@@ -20,7 +20,7 @@
             :label="item.name"
             :value="item.value"
           />
-        </el-select> 
+        </el-select>
       </el-form-item>-->
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData2()">
@@ -76,8 +76,8 @@
         align="center"
       /> -->
       <el-table-column prop="date" label="创建时间" align="center" />
-      <el-table-column prop="date" label="修改时间" align="center" />
-      <!-- <el-table-column prop="status" width="100" label="状态" align="center"> 
+<!--      <el-table-column prop="date" label="修改时间" align="center" />-->
+      <!-- <el-table-column prop="status" width="100" label="状态" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -145,7 +145,7 @@
 
          <el-form-item label="置顶" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off" />
-        </el-form-item> 
+        </el-form-item>
 
          <el-form-item hidden label="状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="form.status" placeholder="请选择">
@@ -156,7 +156,7 @@
               :value="item.value"
             />
           </el-select>
-        </el-form-item> 
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
