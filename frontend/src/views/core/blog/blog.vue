@@ -269,8 +269,8 @@
           <el-input v-model="form.articlesPart" />
         </el-form-item>
 
-        <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
-          <mavon-editor v-model="form.content" />
+        <el-form-item label="内容" :label-width="formLabelWidth" prop="mdContent">
+          <mavon-editor v-model="form.mdContent" />
         </el-form-item>
 
         <el-form-item
@@ -323,7 +323,7 @@ export default {
         status: [
           { required: true, message: '是否发布不能为空', trigger: 'blur' }
         ],
-        content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
+        mdContent: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
       },
       tagList: {}, // 标签列表
       genreList: {}, // 分类列表
