@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 文章Entity
@@ -51,4 +52,7 @@ public class Article extends Domain {
     @TableField(exist = false)
     @ApiModelProperty(value = "分类映射实体, 非数据库表字段")
     private Category category;
+    @TableField(exist = false)
+    @ApiModelProperty(value = "标签映射实体, 非数据库表字段")
+    private List<Tags> tags;
 }
