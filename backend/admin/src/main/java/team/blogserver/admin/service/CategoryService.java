@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import team.ark.core.util.StringUtils;
 import team.blogserver.common.mapper.CategoryMapper;
+import team.blogserver.common.mapper.TagsMapper;
 import team.blogserver.common.model.domain.Category;
 import team.blogserver.common.model.domain.Tags;
+import team.blogserver.common.model.vo.BlogTagCategoryVo;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -60,5 +63,19 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
             return true;
         }
         return false;
+    }
+
+    @Resource
+    private TagsMapper tagsMapper;
+
+    public BlogTagCategoryVo getTagCategory() {
+        BlogTagCategoryVo vo=new BlogTagCategoryVo();
+        //获取标签信息
+        List<Tags> tagList = tagsMapper.selectList(null);
+        vo.setTags(tagList);
+        //获取分类信息
+        List<Category> genreList = baseMapper.selectList(null);
+        vo.setCategories(genreList);
+        return vo;
     }
 }

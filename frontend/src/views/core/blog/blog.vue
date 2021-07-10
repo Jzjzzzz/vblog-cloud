@@ -3,34 +3,8 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="博客标题">
-        <el-input v-model="searchObj.title" placeholder="博客标题" />
+        <el-input v-model="title" placeholder="博客标题" />
       </el-form-item>
-
-      <el-form-item label="分类" prop="blogSortName">
-        <el-select
-          v-model="searchObj.blogSortName"
-          placeholder="请选择"
-          clearable
-        >
-          <el-option
-            v-for="item in genreList"
-            :key="item.id"
-            :label="item.content"
-            :value="item.content"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标签" prop="tagId">
-        <el-select v-model="searchObj.tagId" placeholder="请选择" clearable>
-          <el-option
-            v-for="item in tagList"
-            :key="item.id"
-            :label="item.content"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-
       <el-button type="primary" icon="el-icon-search" @click="fetchData()">
         查询
       </el-button>
@@ -51,36 +25,41 @@
     <el-table :data="list" border stripe>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column prop="title" label="博客标题" align="center" />
-      <el-table-column prop="fileId" label="博客图片" align="center">
+      <el-table-column prop="author.nickname" label="作者" align="center" />
+<!--      <el-table-column prop="fileId" label="博客图片" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-image-->
+<!--            style="width: 100px; height: 100px"-->
+<!--            :src="scope.row.fileId"-->
+<!--            :preview-src-list="srcList"-->
+<!--            @click="srclistBig(scope.row.fileId)"-->
+<!--          />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column prop="category" label="博客分类" align="center">
         <template slot-scope="scope">
-          <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.fileId"
-            :preview-src-list="srcList"
-            @click="srclistBig(scope.row.fileId)"
-          />
+
+          <el-tag type="success">{{ scope.row.category.cateName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="blogSortName" label="博客分类" align="center">
+<!--      <el-table-column prop="tagName" label="博客标签" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag effect="plain">{{ scope.row.tagName }}</el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column prop="pageView" label="博客点击数" align="center" />
+      <el-table-column prop="publishDate" label="创建时间" align="center" />
+      <el-table-column prop="editTime" label="修改时间" align="center" />
+      <el-table-column prop="state" width="100" label="状态" align="center">
         <template slot-scope="scope">
-          <el-tag type="success">{{ scope.row.blogSortName }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="tagName" label="博客标签" align="center">
-        <template slot-scope="scope">
-          <el-tag effect="plain">{{ scope.row.tagName }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="clickCount" label="博客点击数" align="center" />
-      <el-table-column prop="createTime" label="创建时间" align="center" />
-      <el-table-column prop="updateTime" label="修改时间" align="center" />
-      <el-table-column prop="status" width="100" label="状态" align="center">
-        <template slot-scope="scope">
-          <template v-if="scope.row.status == 1">
-            <span>正常</span>
+          <template v-if="scope.row.state == 0">
+            <span>草稿箱</span>
           </template>
-          <template v-if="scope.row.status == 0">
-            <span>下架</span>
+          <template v-if="scope.row.state == 1">
+            <span>已发表</span>
+          </template>
+          <template v-if="scope.row.state == 2">
+            <span>已删除</span>
           </template>
         </template>
       </el-table-column>
@@ -146,25 +125,25 @@
               <el-input v-model="form.summary" type="textarea" />
             </el-form-item>
           </el-col>
-          <el-col style="margin-left:40px" :span="6">
-            <el-form-item label="标题图">
-              <el-upload
-                :class="{ hide: hideUpload }"
-                :action="handleBeforeUploadImg()"
-                :on-success="onUploadSuccessImg"
-                :on-remove="onUploadRemove"
-                :on-preview="handlePictureCardPreview"
-                :on-change="handleChange"
-                :multiple="false"
-                :data="{ module: 'blogTitleImg' }"
-                :limit="1"
-                :file-list="fileListurl"
-                list-type="picture-card"
-              >
-                <i class="el-icon-plus" />
-              </el-upload>
-            </el-form-item>
-          </el-col>
+<!--          <el-col style="margin-left:40px" :span="6">-->
+<!--            <el-form-item label="标题图">-->
+<!--              <el-upload-->
+<!--                :class="{ hide: hideUpload }"-->
+<!--                :action="handleBeforeUploadImg()"-->
+<!--                :on-success="onUploadSuccessImg"-->
+<!--                :on-remove="onUploadRemove"-->
+<!--                :on-preview="handlePictureCardPreview"-->
+<!--                :on-change="handleChange"-->
+<!--                :multiple="false"-->
+<!--                :data="{ module: 'blogTitleImg' }"-->
+<!--                :limit="1"-->
+<!--                :file-list="fileListurl"-->
+<!--                list-type="picture-card"-->
+<!--              >-->
+<!--                <i class="el-icon-plus" />-->
+<!--              </el-upload>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
         </el-row>
 
         <el-row>
@@ -175,16 +154,16 @@
               prop="blogSortId"
             >
               <el-select
-                v-model="form.blogSortName"
+                v-model="form.blogSortId"
                 size="small"
                 placeholder="请选择"
-                @change="blogSortValue"
+                @change="blogSortValue(genreList)"
               >
                 <el-option
                   v-for="item in genreList"
                   :key="item.id"
-                  :label="item.content"
-                  :value="item"
+                  :label="item.cateName"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
@@ -202,77 +181,77 @@
                 <el-option
                   v-for="item in tagList"
                   :key="item.id"
-                  :label="item.content"
+                  :label="item.tagName"
                   :value="item.id"
                 />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="推荐等级" prop="level">
-              <el-select v-model="form.level" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in starsDict"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="4">-->
+<!--            <el-form-item label="推荐等级" prop="level">-->
+<!--              <el-select v-model="form.level" size="small" placeholder="请选择">-->
+<!--                <el-option-->
+<!--                  v-for="item in starsDict"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.name"-->
+<!--                  :value="item.value"-->
+<!--                />-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
         </el-row>
-        <el-row>
-          <el-col :span="4">
-            <el-form-item
-              label="是否原创"
-              :label-width="formLabelWidth"
-              prop="original"
-            >
-              <el-radio-group v-model="form.original" size="small">
-                <el-radio
-                  v-for="item in orderList"
-                  :key="item.id"
-                  :label="item.value"
-                  border
-                >
-                  {{ item.name }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item
-              label="文章评论"
-              :label-width="formLabelWidth"
-              prop="openComment"
-            >
-              <el-radio-group v-model="form.openComment" size="small">
-                <el-radio
-                  v-for="item in commentList"
-                  :key="item.id"
-                  :label="item.value"
-                  border
-                >
-                  {{ item.name }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="是否发布" prop="status">
-              <el-radio-group v-model="form.status" size="small">
-                <el-radio
-                  v-for="item in dataList"
-                  :key="item.id"
-                  :label="item.value"
-                  border
-                >
-                  {{ item.name }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
+<!--        <el-row>-->
+<!--          <el-col :span="4">-->
+<!--            <el-form-item-->
+<!--              label="是否原创"-->
+<!--              :label-width="formLabelWidth"-->
+<!--              prop="original"-->
+<!--            >-->
+<!--              <el-radio-group v-model="form.original" size="small">-->
+<!--                <el-radio-->
+<!--                  v-for="item in orderList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.value"-->
+<!--                  border-->
+<!--                >-->
+<!--                  {{ item.name }}-->
+<!--                </el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="5">-->
+<!--            <el-form-item-->
+<!--              label="文章评论"-->
+<!--              :label-width="formLabelWidth"-->
+<!--              prop="openComment"-->
+<!--            >-->
+<!--              <el-radio-group v-model="form.openComment" size="small">-->
+<!--                <el-radio-->
+<!--                  v-for="item in commentList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.value"-->
+<!--                  border-->
+<!--                >-->
+<!--                  {{ item.name }}-->
+<!--                </el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--          <el-col :span="5">-->
+<!--            <el-form-item label="是否发布" prop="status">-->
+<!--              <el-radio-group v-model="form.status" size="small">-->
+<!--                <el-radio-->
+<!--                  v-for="item in dataList"-->
+<!--                  :key="item.id"-->
+<!--                  :label="item.value"-->
+<!--                  border-->
+<!--                >-->
+<!--                  {{ item.name }}-->
+<!--                </el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-form-item
           v-if="form.original == 2"
           label="作者"
@@ -358,7 +337,7 @@ export default {
       fileListurl: [],
       limitCount: 1,
       hideUpload: false,
-      searchObj: {} // 查询集合
+      title: '' // 查询
     }
   },
 
@@ -416,8 +395,9 @@ export default {
     },
     // 选中分类下拉后给表单赋值
     blogSortValue(item) {
-      this.form.blogSortId = item.id
-      this.form.blogSortName = item.content
+      console.log(item)
+      this.form.blogSortId = item.getid()
+      this.form.blogSortName = item.getcateName()
     },
     // 关闭dialog时清空数据
     closeDialog() {
@@ -489,22 +469,22 @@ export default {
       this.fetchData()
     },
     fetchData() {
-      blogApi.list(this.page, this.limit, this.searchObj).then(response => {
-        this.list = response.data.listPage.records
-        this.total = response.data.listPage.total
-      })
       // 获取标签和分类的数据
       blogApi.getCategoryLabels().then(response => {
-        this.tagList = response.data.categoryLabelsVo.tagList
-        this.genreList = response.data.categoryLabelsVo.genreList
+        this.tagList = response.data.tags
+        this.genreList = response.data.categories
+      })
+      blogApi.list(this.page, this.limit, this.title).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
       })
       // 获取字典数据
-      blogApi.dict().then(response => {
-        this.starsDict = response.data.dict.starsList
-        this.orderList = response.data.dict.orderList
-        this.commentList = response.data.dict.commentList
-        this.dataList = response.data.dict.dataList
-      })
+      // blogApi.dict().then(response => {
+      //   this.starsDict = response.data.dict.starsList
+      //   this.orderList = response.data.dict.orderList
+      //   this.commentList = response.data.dict.commentList
+      //   this.dataList = response.data.dict.dataList
+      // })
     }
   }
 }

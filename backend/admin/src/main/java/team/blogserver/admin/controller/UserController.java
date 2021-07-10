@@ -12,9 +12,13 @@ import team.blogserver.admin.service.UserService;
 import team.blogserver.common.model.domain.User;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
+ * 用户控制器
+ *
  * @author lshz
+ * @date 2021/07/08
  */
 @Slf4j
 @RestController
@@ -95,6 +99,16 @@ public class UserController {
     @PutMapping("/update")
     public R update(@RequestBody User user) {
         return R.judge(userService.updateById(user));
+    }
+
+    @ApiOperation("批量删用户")
+    @PostMapping("/deleteBatch")
+    public R deleteBatch(@RequestBody List<User> userList){
+        boolean result = userService.deleteBatchTag(userList);
+        if(result){
+            return R.ok();
+        }
+        return R.error("批量删除失败");
     }
 
     /**

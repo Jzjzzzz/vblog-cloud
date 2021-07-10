@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export default {
   getCategoryLabels() {
     return request({
-      url: '/admin/core/blog/getCategoryLabels',
+      url: '/article/getTagCategory',
       method: 'get'
     })
   },
@@ -15,21 +15,21 @@ export default {
   },
   save(blog) {
     return request({
-      url: '/admin/core/blog/save',
+      url: '/article/add',
       method: 'post',
       data: blog
     })
   },
-  list(page, limit, searchObj) {
+  list(page, limit, title) {
     return request({
-      url: `/admin/core/blog/blogList/${page}/${limit}`,
+      url: `/article/list/${page}/${limit}`,
       method: 'get',
-      params: searchObj
+      params: { title: title }
     })
   },
   removeById(id) {
     return request({
-      url: `/admin/core/blog/remove/${id}`,
+      url: `/article/delete/${id}`,
       method: 'delete'
     })
   },
@@ -41,7 +41,7 @@ export default {
   },
   updateById(blog) {
     return request({
-      url: '/admin/core/blog/update',
+      url: '/article/update',
       method: 'put',
       data: blog
     })

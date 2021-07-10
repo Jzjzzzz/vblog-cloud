@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import team.ark.core.response.R;
 import team.ark.core.security.JwtUtils;
 import team.blogserver.admin.service.ArticleService;
+import team.blogserver.admin.service.CategoryService;
 import team.blogserver.common.model.domain.Article;
 
 import javax.annotation.Resource;
@@ -27,6 +28,8 @@ import java.util.Date;
 public class ArticleController {
     @Resource
     private ArticleService articleService;
+    @Resource
+    private CategoryService categoryService;
 
     /**
      * 获取所有文章
@@ -110,5 +113,14 @@ public class ArticleController {
         article.setPublishDate(new Date());
         article.setEditTime(new Date());
         return R.judge(articleService.save(article));
+    }
+
+    /**
+     * 获取所有分类和标签
+     */
+    @ApiOperation("获取所有分类和标签")
+    @GetMapping("/getTagCategory")
+    public R getTagCategory() {
+        return R.judge(categoryService.getTagCategory());
     }
 }
