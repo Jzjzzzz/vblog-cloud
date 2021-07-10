@@ -52,5 +52,11 @@ export default {
             method: 'post',
             data: params
         })
-    }
+    },
+  getUserList(page, limit) {
+    return request({
+      url: `/user/list/${page}/${limit}`,
+      method: 'get',
+    })
+  },
 }
