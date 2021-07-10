@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline">
+    <el-form :inline="true" class="demo-form-inline" v-loading="loading">
       <el-form-item label="博客标题">
         <el-input v-model="title" placeholder="博客标题" />
       </el-form-item>
@@ -19,24 +19,46 @@
       </el-button>
 
       <el-button type="default" @click="resetData()">清空</el-button>
+
+      <el-col :span="4">
+        <el-form-item
+          label="状态"
+          :label-width="formLabelWidth"
+          prop="cid"
+        >
+          <el-select
+            v-model="state"
+            size="small"
+            placeholder="全部"
+            @change="listByState(state)"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-col>
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="list" border stripe>
+    <el-table :data="list" border stripe >
       <el-table-column type="index" width="50" align="center" />
       <el-table-column prop="title" label="博客标题" align="center" />
       <el-table-column prop="author.nickname" label="作者" align="center" />
       <el-table-column prop="category" label="博客分类" align="center">
+<!--      <el-table-column prop="pageView" label="博客标签" align="center">-->
         <template slot-scope="scope">
-
           <el-tag type="success">{{ scope.row.category.cateName }}</el-tag>
         </template>
       </el-table-column>
-      <!--      <el-table-column prop="tagName" label="博客标签" align="center">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-tag effect="plain">{{ scope.row.tagName }}</el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
+            <el-table-column prop="tags" label="博客标签" align="center">
+              <template slot-scope="scope"  >
+                <el-tag v-for="item in scope.row.tags" effect="success" >{{ item.tagName }}</el-tag>
+              </template>
+            </el-table-column>
       <el-table-column prop="pageView" label="博客点击数" align="center" />
       <el-table-column prop="publishDate" label="创建时间" align="center" />
       <el-table-column prop="editTime" label="修改时间" align="center" />
@@ -169,7 +191,8 @@
           style="float: right; margin-right: 20px; margin-top: 20px;"
         >
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary" @click="submitForm(0)">存为草稿</el-button>
+          <el-button type="primary" @click="submitForm(1)">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -189,6 +212,7 @@ export default {
     return {
       srcList: [],
       list: [],
+      loading: false,
       total: 0, // 数据库中的总记录数
       page: 1, // 默认页码
       limit: 5, // 每页记录数
@@ -196,6 +220,20 @@ export default {
       dialogVisible: false, // 图片缩略图弹出框状态
       dialogFormVisible: false, // 新增博客弹出框状态
       formLabelWidth: '120px',
+      state: null,
+      options: [{
+        id: '10',
+        label: '全部'
+      }, {
+        id: '0',
+        label: '草稿箱'
+      }, {
+        id: '1',
+        label: '已发表'
+      }, {
+        id: '2',
+        label: '已删除'
+      }],
       form: {},
       rules: {
         title: [
@@ -249,7 +287,10 @@ export default {
         // tag = tag.map(function(data) {
         //   return +data
         // })
-        // this.form.tags = tag
+        // this.form.tags = response.data.tags.id
+        const xx = response.data.tags.map(value => value.id)
+        console.log(xx)
+        this.form.tags = response.data.tags.map(value => value.id)
         this.form.cid = response.data.category.id
       })
     },
@@ -284,18 +325,37 @@ export default {
       this.form.cid = item.getid()
       this.form.blogSortName = item.getcateName()
     },
+    // 选中状态下拉
+    listByState(item) {
+      if (item === '10') {
+
+        blogApi.list(this.page, this.limit, this.title).then(response => {
+          this.list = response.data.records
+
+        })
+      } else {
+        blogApi.listByState(this.page, this.limit, item).then(response => {
+          this.list = response.data.records
+        })
+      }
+    },
     // 关闭dialog时清空数据
     closeDialog() {
       location.reload()
     },
     // 新增表单提交
-    submitForm() {
+    submitForm(state) {
       this.$refs.form.validate(valid => {
         if (!valid) {
           console.log('校验出错')
         } else {
+          this.form.state = state
           if (this.form.id != null) {
-            this.form.tags = this.form.tags.toString()
+            let tags = []
+            this.form.tags.toString().split(',').map(value => {
+              tags.push({ id: value })
+            })
+            Object.assign(this.form.tags, tags)
             blogApi.updateById(this.form).then(response => {
               this.dialogFormVisible = false
               this.$message.success(response.message)
@@ -306,9 +366,9 @@ export default {
             this.form.tags.toString().split(',').map(value => {
               tags.push({ id: value })
             })
-            console.log(tags)
+            // console.log(tags)
             Object.assign(this.form.tags, tags)
-            console.log(this.form)
+            // console.log(this.form)
             blogApi.save(this.form).then(response => {
               this.dialogFormVisible = false
               this.$message.success(response.message)
@@ -318,9 +378,9 @@ export default {
         }
       })
     },
-    handleChange() {
-      this.hideUpload = this.fileList >= this.limitCount // this.limitCount就是图片数量
-    },
+    // handleChange() {
+    //   this.hideUpload = this.fileList >= this.limitCount // this.limitCount就是图片数量
+    // },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
@@ -360,6 +420,8 @@ export default {
       this.fetchData()
     },
     fetchData() {
+      let that = this
+      this.loading = true
       // 获取标签和分类的数据
       blogApi.getCategoryLabels().then(response => {
         this.tagList = response.data.tags
@@ -368,7 +430,8 @@ export default {
       blogApi.list(this.page, this.limit, this.title).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-      })
+        that.loading = false
+      }).catch(error => that.loading = false)
     },
     fetchData1() {
       blogApi.list(1, this.limit, this.title).then(response => {

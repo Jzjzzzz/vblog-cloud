@@ -27,6 +27,12 @@ export default {
       params: { title: title }
     })
   },
+  listByState(page, limit, state) {
+    return request({
+      url: `/article/listByState/${page}/${limit}/${state}`,
+      method: 'get'
+    })
+  },
   removeById(id) {
     return request({
       url: `/article/delete/${id}`,

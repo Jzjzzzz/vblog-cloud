@@ -13,6 +13,8 @@ import team.blogserver.admin.service.ArticleService;
 import team.blogserver.admin.service.CategoryService;
 import team.blogserver.common.mapper.ArticleTagsMapper;
 import team.blogserver.common.model.domain.Article;
+import team.blogserver.common.model.domain.ArticleTags;
+import team.blogserver.common.model.domain.Tags;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -84,6 +86,9 @@ public class ArticleController {
         HashMap<String, Object> map = Maps.newHashMap();
         map.put("aid", article.getId());
         articleTagsMapper.deleteByMap(map);
+        for (Tags tags : article.getTags()) {
+            articleTagsMapper.insert(new ArticleTags(article.getId(), tags.getId()));
+        }
         return R.judge(articleService.updateById(article));
     }
 
