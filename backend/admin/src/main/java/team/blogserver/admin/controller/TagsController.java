@@ -11,6 +11,7 @@ import team.blogserver.admin.service.TagsService;
 import team.blogserver.common.model.domain.Tags;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +38,7 @@ public class TagsController {
     @PostMapping("/save")
     public R save(@RequestBody Tags tags) {
         tags.setSort(0);
+        tags.setDate(new Date());
         boolean result = tagsService.save(tags);
         if (result) {
             return R.ok();

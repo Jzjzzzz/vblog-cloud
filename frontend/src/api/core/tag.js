@@ -6,22 +6,22 @@ export default {
       method: 'get'
     })
   },
-  list(page, limit, searchObj) {
+  list(page, limit, tagName) {
     return request({
-      url: `/admin/core/tag/list/${page}/${limit}`,
+      url: `/tags/list/${page}/${limit}`,
       method: 'get',
-      params: searchObj
+      params: { tagName: tagName }
     })
   },
   removeById(id) {
     return request({
-      url: `/admin/core/tag/remove/${id}`,
+      url: `/tags/remove/${id}`,
       method: 'delete'
     })
   },
   approval(tag) {
     return request({
-      url: '/admin/core/tag/save',
+      url: '/tags/save',
       method: 'post',
       data: tag
     })
@@ -29,26 +29,26 @@ export default {
 
   getById(id) {
     return request({
-      url: `/admin/core/tag/getById/${id}`,
+      url: `/tags/getById/${id}`,
       method: 'get'
     })
   },
   updateById(tag) {
     return request({
-      url: '/admin/core/tag/update',
+      url: '/tags/update',
       method: 'put',
       data: tag
     })
   },
   stickyBlogById(id) {
     return request({
-      url: `/admin/core/tag/stickyBlogById/${id}`,
-      method: 'get'
+      url: `/tags/stickyBlogById/${id}`,
+      method: 'PUT'
     })
   },
   deleteBatchTag(params) {
     return request({
-      url: '/admin/core/tag/deleteBatch',
+      url: '/tags/deleteBatch',
       method: 'post',
       data: params
     })

@@ -3,26 +3,8 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="标签名">
-        <el-input v-model="searchObj.content" placeholder="标签名" />
+        <el-input v-model="tagName" placeholder="标签名" />
       </el-form-item>
-
-      <el-form-item label="标签状态">
-        <el-select
-          v-model="searchObj.status"
-          placeholder="请选择"
-          clearable
-          @change="fetchData()"
-          @clear="resetData()"
-        >
-          <el-option
-            v-for="item in dict"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-
       <el-button type="primary" icon="el-icon-search" @click="fetchData()">
         查询
       </el-button>
@@ -56,36 +38,8 @@
     >
       <el-table-column type="selection" />
       <el-table-column type="index" width="50" align="center" />
-      <el-table-column prop="content" label="博客标签名称" align="center" />
-      <el-table-column
-        width="100"
-        align="center"
-        sortable="custom"
-        prop="sort"
-        label="排序"
-      >
-        <template slot-scope="scope">
-          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="clickcount"
-        width="300"
-        label="点击数"
-        align="center"
-      />
-      <el-table-column prop="createTime" label="创建时间" align="center" />
-      <el-table-column prop="updateTime" label="修改时间" align="center" />
-      <el-table-column prop="status" width="100" label="状态" align="center">
-        <template slot-scope="scope">
-          <template v-if="scope.row.status == 1">
-            <span>正常</span>
-          </template>
-          <template v-if="scope.row.status == 0">
-            <span>下架</span>
-          </template>
-        </template>
-      </el-table-column>
+      <el-table-column prop="tagName" label="博客标签名称" align="center" />
+      <el-table-column prop="date" label="创建时间" align="center" />
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button
@@ -137,23 +91,9 @@
         <el-form-item
           label="标签名"
           :label-width="formLabelWidth"
-          prop="content"
+          prop="tagName"
         >
-          <el-input v-model="form.content" auto-complete="off" />
-        </el-form-item>
-
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="form.sort" auto-complete="off" />
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择">
-            <el-option
-              v-for="item in dict"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            />
-          </el-select>
+          <el-input v-model="form.tagName" auto-complete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,20 +118,14 @@ export default {
       total: 0, // 数据库中的总记录数
       page: 1, // 默认页码
       limit: 5, // 每页记录数
-      searchObj: {}, // 查询条件
-      dict: [], // 字典数据
+      tagName: '', // 查询条件
       formLabelWidth: '120px',
       dialogVisible: false,
       form: {}, // 新增
       rules: {
-        content: [
+        tagName: [
           { required: true, message: '博客标签名不能为空', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在1到20个字符' }
-        ],
-        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
-        sort: [
-          { required: true, message: '排序字段不能为空', trigger: 'blur' },
-          { pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数' }
         ]
       }
     }
@@ -210,7 +144,7 @@ export default {
     approvalShow(row) {
       this.dialogVisible = true
       tagApi.getById(row).then(response => {
-        this.form = response.data.model
+        this.form = response.data
       })
     },
 
@@ -245,13 +179,9 @@ export default {
     },
     fetchData() {
       // 调用api
-      tagApi.list(this.page, this.limit, this.searchObj).then(response => {
-        this.list = response.data.listPage.records
-        this.total = response.data.listPage.total
-      })
-      // 字典数据
-      tagApi.dict().then(response => {
-        this.dict = response.data.dict
+      tagApi.list(this.page, this.limit, this.tagName).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
       })
     },
     // 根据id置顶数据
