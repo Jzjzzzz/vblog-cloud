@@ -119,9 +119,9 @@ public class JwtUtils {
             userDetails.setId(Integer.parseInt(claims.getId()));
             userDetails.setUsername(claims.getSubject());
             // 获取角色
-            String authorities = claims.get("authorities").toString();
+            String authorities = (String) claims.get("authorities");
             List<GrantedAuthority> authorityList = new ArrayList<>();
-            if (StringUtils.isNotEmpty(authorities)) {
+            if (StringUtils.isNotEmpty(authorities) && !"null".equals(authorities)) {
                 authorityList = JsonUtils.<List<Map<String, String>>>toObj(authorities)
                         .stream()
                         .map(i -> new SimpleGrantedAuthority(i.get("authority")))
@@ -131,6 +131,7 @@ public class JwtUtils {
             userDetails.setAuthorities(authorityList);
             return userDetails;
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("解析Token失败: {}", e.getMessage());
         }
         return null;

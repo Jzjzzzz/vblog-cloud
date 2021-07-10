@@ -50,7 +50,7 @@ public class ApiSmsController {
         log.info("user:" + user);
         tengXunSmsService.send(mobile, code);
         //将验证码存入redis中
-        cacheStore.put("mobile-code", code, 3, TimeUnit.MINUTES);
+        cacheStore.put(mobile, code, 3, TimeUnit.MINUTES);
         return R.ok();
     }
 }
