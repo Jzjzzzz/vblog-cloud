@@ -2,44 +2,51 @@
   <div class="login">
     <div class="scene">
       <div class="wrap">
-        <div class="wall wall-right"></div>
-        <div class="wall wall-left"></div>
-        <div class="wall wall-top"></div>
-        <div class="wall wall-bottom"></div>
-        <div class="wall wall-back"></div>
+        <div class="wall wall-right" />
+        <div class="wall wall-left" />
+        <div class="wall wall-top" />
+        <div class="wall wall-bottom" />
+        <div class="wall wall-back" />
       </div>
       <div class="wrap">
-        <div class="wall wall-right"></div>
-        <div class="wall wall-left"></div>
-        <div class="wall wall-top"></div>
-        <div class="wall wall-bottom"></div>
-        <div class="wall wall-back"></div>
+        <div class="wall wall-right" />
+        <div class="wall wall-left" />
+        <div class="wall wall-top" />
+        <div class="wall wall-bottom" />
+        <div class="wall wall-back" />
       </div>
     </div>
-    <el-form :rules="rules" class="login-container" label-position="left" label-width="0px" v-loading="loading">
+    <el-form v-loading="loading" :rules="rules" class="login-container" label-position="left" label-width="0px">
       <h3 class="login_title">系统登录</h3>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="密码登录" name="first">
           <el-form-item prop="account">
-            <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
+            <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号" />
           </el-form-item>
           <el-form-item prop="checkPass">
-            <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
+            <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" />
           </el-form-item>
-          <el-checkbox class="login_remember" v-model="checked" label-position="left">记住密码</el-checkbox>
+          <el-checkbox v-model="checked" class="login_remember" label-position="left">记住密码</el-checkbox>
           <el-form-item style="width: 100%">
-            <el-button type="primary" @click.native.prevent="submitClick" style="width: 100%">登录</el-button>
+            <el-button type="primary" style="width: 100%" @click.native.prevent="submitClick">登录</el-button>
           </el-form-item>
         </el-tab-pane>
         <el-tab-pane label="手机登录" name="second">
-          <el-form-item prop="account">
-            <el-input type="text" v-model="loginForm.phone" auto-complete="off" placeholder="手机号码"></el-input>
+          <el-form-item >
+            <el-input v-model="loginForm.mobile" type="text" auto-complete="off" placeholder="手机号码" />
           </el-form-item>
-          <el-form-item prop="checkPass">
-            <el-input type="password" v-model="loginForm.code" auto-complete="off" placeholder="验证码"></el-input>
+          <el-form-item >
+            <el-button v-if="!sending" type="primary" icon="el-icon-message" @click="sendBtn()">发送验证码</el-button>
+            <el-button v-else disabled type="danger" icon="el-icon-check" >
+              {{ leftSecond }}秒后重发
+            </el-button>
+          </el-form-item>
+
+          <el-form-item>
+            <el-input v-model="loginForm.code" type="password" auto-complete="off" placeholder="验证码" />
           </el-form-item>
           <el-form-item style="width: 100%">
-            <el-button type="primary" @click.native.prevent="submitClick" style="width: 100%">一键登录</el-button>
+            <el-button type="primary" style="width: 100%" @click.native.prevent="loginMobile">一键登录</el-button>
           </el-form-item>
         </el-tab-pane>
       </el-tabs>
@@ -49,65 +56,119 @@
 </template>
 
 <script>
-  import {
-    validUsername
-  } from '@/utils/validate'
+import {
+  validUsername
+} from '@/utils/validate'
+import { send } from '@/api/user'
 
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        rules: {
-          account: [{
-            required: true,
-            message: '请输入用户名',
-            trigger: 'blur'
-          }],
-          checkPass: [{
-            required: true,
-            message: '请输入密码',
-            trigger: 'blur'
-          }]
-        },
-        checked: true,
-        loginForm: {
-          username: 'linghu',
-          password: '123',
-          phone: '',
-          code: ''
-        },
-        loading: false,
-        activeName: 'second'
-      }
-    },
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
-    },
-    methods: {
-      handleClick(tab, event) {
-        console.log(tab, event);
+export default {
+  name: 'Login',
+  data() {
+    return {
+      rules: {
+        account: [{
+          required: true,
+          message: '请输入用户名',
+          trigger: 'blur'
+        }],
+        checkPass: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }]
       },
-      submitClick: function() {
-        var _this = this;
-        this.loading = true;
-        this.$store.dispatch('user/login', this.loginForm).then(() => {
-          // 成功跳转
-          _this.$router.replace({
-            path: '/dashboard'
-          });
-        }).catch(err => {
-          // 失败
-          _this.$alert(err.message);
-          this.loading = false;
-        });
+      checked: true,
+      loginForm: {
+        username: 'linghu',
+        password: '123',
+        mobile: '',
+        code: ''
+      },
+      loading: false,
+      activeName: 'second',
+      sending: false,
+      second: 60, // 倒计时间
+      leftSecond: 0 // 剩余时间
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    // 发短信
+    sendBtn() {
+      if (!this.loginForm.mobile) {
+        this.$message.error('请输入手机号')
+        return
       }
+      // 防止重复提交
+      if (this.sending) return
+      this.sending = true
+      // 倒计时
+      this.timeDown()
+      // 远程调用发送短信的接口
+      send(this.loginForm.mobile).then(response => {
+        this.$message.success(response.message)
+      })
+    },
+    // 倒计时
+    timeDown() {
+      console.log('进入倒计时')
+      this.leftSecond = this.second
+      // 创建定时器
+      const timmer = setInterval(() => {
+        // 计数器减一
+        this.leftSecond--
+        if (this.leftSecond <= 0) {
+          // 停止定时器
+          clearInterval(timmer)
+          // 还原计数器
+          this.leftSecond = this.second
+          // 还原按钮状态
+          this.sending = false
+        }
+      }, 1000)
+    },
+
+    handleClick(tab, event) {
+      console.log(tab, event)
+    },
+    submitClick: function() {
+      var _this = this
+      this.loading = true
+      this.$store.dispatch('user/login', this.loginForm).then(() => {
+        // 成功跳转
+        _this.$router.replace({
+          path: '/dashboard'
+        })
+      }).catch(err => {
+        // 失败
+        _this.$alert(err.message)
+        this.loading = false
+      })
+    },
+
+    loginMobile: function() {
+      var _this = this
+      this.loading = true
+      this.$store.dispatch('user/loginMobile', this.loginForm).then(() => {
+        // 成功跳转
+        _this.$router.replace({
+          path: '/dashboard'
+        })
+      }).catch(err => {
+        // 失败
+        _this.$alert(err.message)
+        this.loading = false
+      })
     }
   }
+}
 </script>
 
 <style scoped="scoped">

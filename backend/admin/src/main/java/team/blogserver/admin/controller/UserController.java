@@ -17,6 +17,7 @@ import team.ark.core.util.BeanUtil;
 import team.blogserver.admin.service.UserService;
 import team.blogserver.common.mapper.RolesUserMapper;
 import team.blogserver.common.model.domain.User;
+import team.blogserver.common.model.vo.MobileCode;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -132,8 +133,10 @@ public class UserController {
         return R.judge(userService.getById(JwtUtils.<Long>getId()));
     }
 
-    @PostMapping("user/loginMobile")
-    public R loginMobile(String mobile, String code) {
+    @PostMapping("/loginMobile")
+    public R loginMobile(@RequestBody MobileCode mobileCode) {
+        String mobile = mobileCode.getMobile();
+        String code = mobileCode.getCode();
         // 判断手机号键和验证码值是否在缓存中
         Assert.isTrue(cacheStore.get(mobile).orElse("").equals(code), "验证码不正确");
         // 消费缓存

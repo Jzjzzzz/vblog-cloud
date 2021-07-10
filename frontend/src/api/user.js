@@ -1,33 +1,48 @@
 import request from '@/utils/request'
 
 export function login(data) {
-    return request({
-        url: '/user/login',
-        method: 'post',
-        data
-    })
+  return request({
+    url: '/user/login',
+    method: 'post',
+    data
+  })
+}
+
+export function loginMobile(data) {
+  return request({
+    url: `/user/loginMobile`,
+    method: 'post',
+    data
+  })
+}
+
+export function send(mobile) {
+  return request({
+    url: `/sms/send/${mobile}`,
+    method: 'get'
+  })
 }
 
 export function getInfo() {
-    return request({
-        url: '/user/my',
-        method: 'get',
-    })
+  return request({
+    url: '/user/my',
+    method: 'get'
+  })
 }
 
 export function logout() {
-    return request({
-        url: '/user/logout',
-        method: 'post'
-    })
+  return request({
+    url: '/user/logout',
+    method: 'post'
+  })
 }
 
 export function getUserList(page, limit, name) {
-    return request({
-        url: `/user/list/${page}/${limit}`,
-        method: 'get',
-        params: { name: name }
-    })
+  return request({
+    url: `/user/list/${page}/${limit}`,
+    method: 'get',
+    params: { name: name }
+  })
 }
 
 export function deleteRequest(id) {
