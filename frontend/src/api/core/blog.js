@@ -27,6 +27,13 @@ export default {
       params: { title: title }
     })
   },
+  ulist(page, limit, title) {
+    return request({
+      url: `/user/list/${page}/${limit}`,
+      method: 'get',
+      params: { name: title }
+    })
+  },
   removeById(id) {
     return request({
       url: `/article/delete/${id}`,
@@ -35,7 +42,7 @@ export default {
   },
   getById(id) {
     return request({
-      url: `/admin/core/blog/getById/${id}`,
+      url: `/article/details/${id}`,
       method: 'get'
     })
   },

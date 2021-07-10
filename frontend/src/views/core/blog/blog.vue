@@ -252,22 +252,22 @@
 <!--            </el-form-item>-->
 <!--          </el-col>-->
 <!--        </el-row>-->
-        <el-form-item
-          v-if="form.original == 2"
-          label="作者"
-          :label-width="formLabelWidth"
-          prop="author"
-        >
-          <el-input v-model="form.author" />
-        </el-form-item>
+<!--        <el-form-item-->
+<!--          v-if="form.original == 2"-->
+<!--          label="作者"-->
+<!--          :label-width="formLabelWidth"-->
+<!--          prop="author"-->
+<!--        >-->
+<!--          <el-input v-model="form.author" />-->
+<!--        </el-form-item>-->
 
-        <el-form-item
-          v-if="form.original == 2"
-          label="文章出处"
-          :label-width="formLabelWidth"
-        >
-          <el-input v-model="form.articlesPart" />
-        </el-form-item>
+<!--        <el-form-item-->
+<!--          v-if="form.original == 2"-->
+<!--          label="文章出处"-->
+<!--          :label-width="formLabelWidth"-->
+<!--        >-->
+<!--          <el-input v-model="form.articlesPart" />-->
+<!--        </el-form-item>-->
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="mdContent">
           <mavon-editor v-model="form.mdContent" />
@@ -350,7 +350,7 @@ export default {
     approvalShow(row) {
       this.dialogFormVisible = true
       blogApi.getById(row).then(response => {
-        this.form = response.data.blog
+        this.form = response.data
         // 表单数据类型转换
         var tag = new Array()
         tag = this.form.tagId.split(',')
@@ -358,8 +358,10 @@ export default {
           return +data
         })
         this.form.tagId = tag
-        this.form.original = this.form.original == true ? 1 : 2
-        this.form.openComment = this.form.openComment == true ? 1 : 2
+        this.form.tagId = tag
+        this.form.tagId = tag
+        // this.form.original = this.form.original == true ? 1 : 2
+        // this.form.openComment = this.form.openComment == true ? 1 : 2
 
         this.fileListurl.push({
           name: 'blogTitleImg',
@@ -477,6 +479,10 @@ export default {
       blogApi.list(this.page, this.limit, this.title).then(response => {
         this.list = response.data.records
         this.total = response.data.total
+      })
+
+      blogApi.ulist(this.page, this.limit, this.title).then(response => {
+        console.log(response.data)
       })
       // 获取字典数据
       // blogApi.dict().then(response => {

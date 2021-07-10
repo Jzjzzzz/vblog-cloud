@@ -38,7 +38,7 @@ public class UserController {
      * @return 用户列表
      */
     @ApiOperation(value = "用户列表", notes = "传name既是根据用户名或者昵称模糊查找，为空则查全部")
-    @GetMapping("/list/{page}/{limit}/{name}")
+    @GetMapping("/list/{page}/{limit}")
     public R list(@PathVariable Long page, @PathVariable Long limit, String name) {
         Page<User> pageParam = new Page<>(page, limit);
         IPage<User> listPage = userService.listPage(pageParam, name);
