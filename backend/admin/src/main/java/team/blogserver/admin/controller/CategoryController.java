@@ -14,6 +14,7 @@ import team.blogserver.common.model.domain.Tags;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class CategoryController {
     @PostMapping("/save")
     public R save(@RequestBody Category category) {
         category.setSort(0);
+        category.setDate(new Date());
         boolean result = categoryService.save(category);
         if (result) {
             return R.ok();

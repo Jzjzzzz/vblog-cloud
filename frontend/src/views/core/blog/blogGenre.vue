@@ -231,7 +231,6 @@ export default {
               this.fetchData()
             })
           } else {
-            this.form.date=Date();
             genreApi.approval(this.form).then(response => {
               this.dialogVisible = false
               this.$message.success(response.message)
