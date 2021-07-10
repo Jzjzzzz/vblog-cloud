@@ -3,10 +3,10 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="分类名">
-        <el-input v-model="searchObj.content" placeholder="分类名" />
+        <el-input v-model="searchObj.cateName" placeholder="分类名" />
       </el-form-item>
 
-      <el-form-item label="分类状态">
+      <!-- <el-form-item label="分类状态">
         <el-select
           v-model="searchObj.status"
           placeholder="请选择"
@@ -20,8 +20,8 @@
             :label="item.name"
             :value="item.value"
           />
-        </el-select>
-      </el-form-item>
+        </el-select> 
+      </el-form-item>-->
 
       <el-button type="primary" icon="el-icon-search" @click="fetchData()">
         查询
@@ -50,33 +50,34 @@
     <!-- 表格 -->
     <el-table
       :data="list"
+      :key="itemKey"
       border
       stripe
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" />
-      <el-table-column type="index" width="50" align="center" />
-      <el-table-column prop="content" label="博客分类名称" align="center" />
+      <!-- <el-table-column type="index" label="序号" width="50" align="center" /> -->
+       <el-table-column width="100" prop="id" label="id" align="center"   />
+      <el-table-column prop="cateName" label="博客分类名称" align="center"   />
       <el-table-column
         width="100"
         align="center"
-        sortable="custom"
-        prop="sort"
-        label="排序"
+        prop='sort'
+        label="置顶"
       >
         <template slot-scope="scope">
           <el-tag type="warning">{{ scope.row.sort }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
+       <!-- <el-table-column
         prop="clickcount"
         width="300"
         label="点击数"
         align="center"
-      />
-      <el-table-column prop="createTime" label="创建时间" align="center" />
-      <el-table-column prop="updateTime" label="修改时间" align="center" />
-      <el-table-column prop="status" width="100" label="状态" align="center">
+      /> -->
+      <el-table-column prop="date" label="创建时间" align="center" />
+      <el-table-column prop="date" label="修改时间" align="center" />
+      <!-- <el-table-column prop="status" width="100" label="状态" align="center"> 
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -85,7 +86,7 @@
             <span>下架</span>
           </template>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" width="300" align="center">
         <template slot-scope="scope">
           <el-button
@@ -137,15 +138,16 @@
         <el-form-item
           label="分类名"
           :label-width="formLabelWidth"
-          prop="content"
+          prop="cateName"
         >
-          <el-input v-model="form.content" auto-complete="off" />
+          <el-input v-model="form.cateName" auto-complete="off" />
         </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+         <el-form-item label="置顶" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off" />
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+        </el-form-item> 
+
+         <el-form-item hidden label="状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="form.status" placeholder="请选择">
             <el-option
               v-for="item in dict"
@@ -154,7 +156,8 @@
               :value="item.value"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> 
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">
@@ -169,6 +172,7 @@
 </template>
 <script>
 import genreApi from '@/api/core/genre'
+import util from '@/utils/index'
 export default {
   // 定义数据模型
   data() {
@@ -182,13 +186,14 @@ export default {
       dict: [], // 字典数据
       formLabelWidth: '120px',
       dialogVisible: false,
-      form: {}, // 新增
+      form: {}, // 新增,
+      itemKey:0,
       rules: {
-        content: [
+        cateName: [
           { required: true, message: '博客分类名不能为空', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在1到20个字符' }
         ],
-        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
+        // status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
         sort: [
           { required: true, message: '排序字段不能为空', trigger: 'blur' },
           { pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数' }
@@ -198,7 +203,7 @@ export default {
   },
   // 页面渲染成功后获取数据
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   // 定义方法
   methods: {
@@ -210,7 +215,7 @@ export default {
     approvalShow(row) {
       this.dialogVisible = true
       genreApi.getById(row).then(response => {
-        this.form = response.data.model
+        this.form = response.data
       })
     },
 
@@ -226,6 +231,7 @@ export default {
               this.fetchData()
             })
           } else {
+            this.form.date=Date();
             genreApi.approval(this.form).then(response => {
               this.dialogVisible = false
               this.$message.success(response.message)
@@ -246,13 +252,17 @@ export default {
     fetchData() {
       // 调用api
       genreApi.list(this.page, this.limit, this.searchObj).then(response => {
-        this.list = response.data.listPage.records
-        this.total = response.data.listPage.total
-      })
+        this.list = response.data.records
+        this.total = response.data.total
+      });
+
+
+      // this.itemKey = Math.random();
+      // console.log(this.list);
       // 字典数据
-      genreApi.dict().then(response => {
-        this.dict = response.data.dict
-      })
+      // genreApi.dict().then(response => {
+      //   this.dict = response.data.dict
+      // })
     },
     // 根据id置顶数据
     stickyBlogById(id) {

@@ -1,23 +1,23 @@
 import request from '@/utils/request'
 
 export function login(data) {
-  return request({
-    url: '/user/login',
-    method: 'post',
-    data
-  })
+    return request({
+        url: '/user/login',
+        method: 'post',
+        data
+    })
 }
 
 export function getInfo() {
-  return request({
-    url: '/user/my',
-    method: 'get',
-  })
+    return request({
+        url: '/user/my',
+        method: 'get',
+    })
 }
 
 export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
+    return request({
+        url: '/user/logout',
+        method: 'post'
+    })
 }
