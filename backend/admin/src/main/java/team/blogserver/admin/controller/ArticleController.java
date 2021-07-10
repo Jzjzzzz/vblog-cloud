@@ -1,10 +1,10 @@
 package team.blogserver.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -146,5 +146,17 @@ public class ArticleController {
     @GetMapping("/getTagCategory")
     public R getTagCategory() {
         return R.judge(categoryService.getTagCategory());
+    }
+
+    /**
+     * 获取所有文章浏览量综合
+     */
+    @ApiOperation("获取所有文章浏览量综合")
+    @GetMapping("/getAllPageView")
+    public R getAllPageView() {
+        return R.judge(articleService.list(new QueryWrapper<Article>()
+                .select(Article.class, i -> "pageView".equals(i.getProperty())))
+                .stream().mapToInt(Article::getPageView)
+                .sum());
     }
 }
