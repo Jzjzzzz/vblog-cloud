@@ -56,8 +56,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" />
-      <!-- <el-table-column type="index" label="序号" width="50" align="center" /> -->
-       <el-table-column width="100" prop="id" label="id" align="center"   />
+      <el-table-column type="index" label="序号" width="50" align="center" />
+       <!-- <el-table-column width="100" prop="id" label="id" align="center"   /> -->
       <el-table-column prop="cateName" label="博客分类名称" align="center"   />
       <el-table-column
         width="100"
