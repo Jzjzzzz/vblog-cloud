@@ -151,10 +151,10 @@
             <el-form-item
               label="分类"
               :label-width="formLabelWidth"
-              prop="blogSortId"
+              prop="cid"
             >
               <el-select
-                v-model="form.blogSortId"
+                v-model="form.cid"
                 size="small"
                 placeholder="请选择"
                 @change="blogSortValue(genreList)"
@@ -310,7 +310,7 @@ export default {
           { required: true, message: '博客标题不能为空', trigger: 'blur' },
           { min: 1, max: 30, message: '长度在1到30个字符' }
         ],
-        blogSortId: [
+        cid: [
           { required: true, message: '分类不能为空', trigger: 'blur' }
         ],
         tagId: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
@@ -352,22 +352,21 @@ export default {
       blogApi.getById(row).then(response => {
         this.form = response.data
         // 表单数据类型转换
-        var tag = new Array()
-        tag = this.form.tagId.split(',')
-        tag = tag.map(function(data) {
-          return +data
-        })
-        this.form.tagId = tag
-        this.form.tagId = tag
-        this.form.tagId = tag
+        // var tag = new Array()
+        // tag = this.form.tagId.split(',')
+        // tag = tag.map(function(data) {
+        //   return +data
+        // })
+        // this.form.tagId = tag
+        // this.form.tagId = tag
         // this.form.original = this.form.original == true ? 1 : 2
         // this.form.openComment = this.form.openComment == true ? 1 : 2
-
-        this.fileListurl.push({
-          name: 'blogTitleImg',
-          url: this.form.fileId
-        })
-        this.fileList = 1
+        this.form.cid = response.data.category.id
+        // this.fileListurl.push({
+        //   name: 'blogTitleImg',
+        //   url: this.form.fileId
+        // })
+        // this.fileList = 1
       })
     },
     // 根据id删除数据
@@ -398,7 +397,7 @@ export default {
     // 选中分类下拉后给表单赋值
     blogSortValue(item) {
       console.log(item)
-      this.form.blogSortId = item.getid()
+      this.form.cid = item.getid()
       this.form.blogSortName = item.getcateName()
     },
     // 关闭dialog时清空数据
@@ -479,10 +478,6 @@ export default {
       blogApi.list(this.page, this.limit, this.title).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-      })
-
-      blogApi.ulist(this.page, this.limit, this.title).then(response => {
-        console.log(response.data)
       })
       // 获取字典数据
       // blogApi.dict().then(response => {
