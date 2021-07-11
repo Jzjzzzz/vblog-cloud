@@ -20,11 +20,11 @@ export default {
       data: blog
     })
   },
-  list(page, limit, title) {
+  list(page, limit, title, state) {
     return request({
       url: `/article/list/${page}/${limit}`,
       method: 'get',
-      params: { title: title }
+      params: { title: title, state: state }
     })
   },
   listByState(page, limit, state) {

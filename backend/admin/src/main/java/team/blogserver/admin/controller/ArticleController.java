@@ -42,8 +42,8 @@ public class ArticleController {
      */
     @ApiOperation("获取所有文章（不含详情）")
     @GetMapping("/list/{page}/{limit}")
-    public R list(@PathVariable Long page, @PathVariable Long limit, String title) {
-        return R.judge(articleService.listPage(new Page<>(page, limit), title));
+    public R list(@PathVariable Long page, @PathVariable Long limit, String title,Long state) {
+        return R.judge(articleService.listPage(new Page<>(page, limit), title,state));
     }
 
     /**

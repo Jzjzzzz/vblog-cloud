@@ -1,9 +1,28 @@
 <template>
   <div class="app-container">
     <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline" v-loading="loading">
+    <el-form v-loading="loading" :inline="true" class="demo-form-inline">
       <el-form-item label="博客标题">
         <el-input v-model="title" placeholder="博客标题" />
+      </el-form-item>
+      <el-form-item
+        label="状态"
+
+        prop="cid"
+      >
+        <el-select
+          v-model="state"
+          size="small"
+          placeholder="全部"
+          @change="listByState(state)"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-button type="primary" icon="el-icon-search" @click="fetchData1()">
         查询
@@ -20,45 +39,26 @@
 
       <el-button type="default" @click="resetData()">清空</el-button>
 
-      <el-col :span="4">
-        <el-form-item
-          label="状态"
-          :label-width="formLabelWidth"
-          prop="cid"
-        >
-          <el-select
-            v-model="state"
-            size="small"
-            placeholder="全部"
-            @change="listByState(state)"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-col>
+
+
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="list" border stripe >
+    <el-table :data="list" border stripe>
       <el-table-column type="index" width="50" align="center" />
       <el-table-column prop="title" label="博客标题" align="center" />
       <el-table-column prop="author.nickname" label="作者" align="center" />
       <el-table-column prop="category" label="博客分类" align="center">
-<!--      <el-table-column prop="pageView" label="博客标签" align="center">-->
+        <!--      <el-table-column prop="pageView" label="博客标签" align="center">-->
         <template slot-scope="scope">
           <el-tag type="success">{{ scope.row.category.cateName }}</el-tag>
         </template>
       </el-table-column>
-            <el-table-column prop="tags" label="博客标签" align="center">
-              <template slot-scope="scope"  >
-                <el-tag v-for="item in scope.row.tags" effect="success" >{{ item.tagName }}</el-tag>
-              </template>
-            </el-table-column>
+      <el-table-column prop="tags" label="博客标签" align="center">
+        <template slot-scope="scope">
+          <el-tag v-for="item in scope.row.tags" effect="success">{{ item.tagName }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="pageView" label="博客点击数" align="center" />
       <el-table-column prop="publishDate" label="创建时间" align="center" />
       <el-table-column prop="editTime" label="修改时间" align="center" />
@@ -328,10 +328,8 @@ export default {
     // 选中状态下拉
     listByState(item) {
       if (item === '10') {
-
-        blogApi.list(this.page, this.limit, this.title).then(response => {
+        blogApi.list(this.page, this.limit, this.title,this.state).then(response => {
           this.list = response.data.records
-
         })
       } else {
         blogApi.listByState(this.page, this.limit, item).then(response => {
@@ -351,7 +349,7 @@ export default {
         } else {
           this.form.state = state
           if (this.form.id != null) {
-            let tags = []
+            const tags = []
             this.form.tags.toString().split(',').map(value => {
               tags.push({ id: value })
             })
@@ -362,7 +360,7 @@ export default {
               this.fetchData()
             })
           } else {
-            let tags = []
+            const tags = []
             this.form.tags.toString().split(',').map(value => {
               tags.push({ id: value })
             })
@@ -420,21 +418,21 @@ export default {
       this.fetchData()
     },
     fetchData() {
-      let that = this
+      const that = this
       this.loading = true
       // 获取标签和分类的数据
       blogApi.getCategoryLabels().then(response => {
         this.tagList = response.data.tags
         this.genreList = response.data.categories
       })
-      blogApi.list(this.page, this.limit, this.title).then(response => {
+      blogApi.list(this.page, this.limit, this.title,this.state).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         that.loading = false
       }).catch(error => that.loading = false)
     },
     fetchData1() {
-      blogApi.list(1, this.limit, this.title).then(response => {
+      blogApi.list(1, this.limit, this.title,this.state).then(response => {
         this.list = response.data.records
         this.total = response.data.total
       })

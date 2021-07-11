@@ -29,10 +29,14 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Resource
     ArticleTagsMapper articleTagsMapper;
 
-    public IPage<Article> listPage(Page<Article> pageParam, String title) {
-        return baseMapper.selectPage(pageParam, new QueryWrapper<Article>()
-                .select(Article.class, i -> !i.getProperty().endsWith("Content"))
-                .like(StringUtils.isNotBlank(title), "title", title));
+    public IPage<Article> listPage(Page<Article> pageParam, String title, Long state) {
+        QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
+        articleQueryWrapper.select(Article.class, i -> !i.getProperty().endsWith("Content"));
+        articleQueryWrapper.like(StringUtils.isNotBlank(title), "title", title);
+        if (state != null&&state!=10L) {
+            articleQueryWrapper.eq("state", state);
+        }
+        return baseMapper.selectPage(pageParam, articleQueryWrapper);
     }
 
     public IPage<Article> listPageByState(Page<Article> pageParam, Integer state) {
