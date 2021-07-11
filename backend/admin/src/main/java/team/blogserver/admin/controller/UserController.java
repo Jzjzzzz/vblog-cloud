@@ -16,6 +16,7 @@ import team.ark.core.security.UserDetails;
 import team.ark.core.util.BeanUtil;
 import team.blogserver.admin.service.UserService;
 import team.blogserver.common.mapper.RolesUserMapper;
+import team.blogserver.common.model.domain.RolesUser;
 import team.blogserver.common.model.domain.User;
 import team.blogserver.common.model.vo.MobileCode;
 
@@ -98,7 +99,10 @@ public class UserController {
     public R save(@RequestBody User user) {
         boolean result = userService.save(user);
         if (result) {
-            return R.ok();
+            RolesUser rolesUser = new RolesUser();
+            rolesUser.setUid(user.getId());
+            rolesUser.setRid(2);
+            return R.judge(rolesUserMapper.insert(rolesUser));
         }
         return R.error("新增失败");
     }
