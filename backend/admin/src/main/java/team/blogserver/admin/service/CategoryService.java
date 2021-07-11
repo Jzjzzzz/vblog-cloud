@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import team.ark.core.util.StringUtils;
@@ -12,6 +13,7 @@ import team.blogserver.common.mapper.CategoryMapper;
 import team.blogserver.common.mapper.TagsMapper;
 import team.blogserver.common.model.domain.Category;
 import team.blogserver.common.model.domain.Tags;
+import team.blogserver.common.model.dto.ExcelCategoryDTO;
 import team.blogserver.common.model.vo.BlogTagCategoryVo;
 
 import javax.annotation.Resource;
@@ -77,5 +79,15 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
         List<Category> genreList = baseMapper.selectList(null);
         vo.setCategories(genreList);
         return vo;
+    }
+    public List<ExcelCategoryDTO> listCategoryData() {
+        List<Category> categoryList = baseMapper.selectList(null);
+        ArrayList<ExcelCategoryDTO> excelCategoryDTOArrayList = new ArrayList<>(categoryList.size());
+        categoryList.forEach(category -> {
+            ExcelCategoryDTO excelCategoryDTO = new ExcelCategoryDTO();
+            BeanUtils.copyProperties(category, excelCategoryDTO);
+            excelCategoryDTOArrayList.add(excelCategoryDTO);
+        });
+        return excelCategoryDTOArrayList;
     }
 }

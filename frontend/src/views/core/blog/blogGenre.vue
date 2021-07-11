@@ -45,6 +45,14 @@
         删除选中
       </el-button>
       <el-button type="default" @click="resetData()">清空</el-button>
+      <!-- Excel导出按钮 -->
+      <el-button
+        @click="exportData"
+        type="primary"
+        icon="el-icon-upload2"
+      >
+        导出Excel
+      </el-button>
     </el-form>
 
     <!-- 表格 -->
@@ -207,6 +215,10 @@ export default {
   },
   // 定义方法
   methods: {
+    exportData() {
+      //导出Excel并下载
+      window.location.href = process.env.VUE_APP_BASE_API + '/category/export'
+    },
     // 关闭dialog时清空数据
     closeDialog() {
       this.form = {}

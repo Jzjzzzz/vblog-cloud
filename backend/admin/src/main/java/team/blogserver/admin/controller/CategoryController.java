@@ -1,5 +1,6 @@
 package team.blogserver.admin.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -11,8 +12,12 @@ import team.ark.core.response.R;
 import team.blogserver.admin.service.CategoryService;
 import team.blogserver.common.model.domain.Category;
 import team.blogserver.common.model.domain.Tags;
+import team.blogserver.common.model.dto.ExcelCategoryDTO;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,5 +103,23 @@ public class CategoryController {
             return R.ok();
         }
         return R.error("操作失败");
+    }
+
+    @ApiOperation("Excel数据的导出")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response){
+
+        try {
+            // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+            response.setContentType("application/vnd.ms-excel");
+            response.setCharacterEncoding("utf-8");
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode("category", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            EasyExcel.write(response.getOutputStream(), ExcelCategoryDTO.class).sheet("分类数据").doWrite(categoryService.listCategoryData());
+        } catch (IOException e) {
+            //EXPORT_DATA_ERROR(104, "数据导出失败"),
+            throw  new ArithmeticException("数据导出失败");
+        }
     }
 }
