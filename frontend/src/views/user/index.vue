@@ -2,12 +2,12 @@
   <div class="user">
     <div style="margin-top: 10px; display: flex; justify-content: center">
       <el-input
+        v-model="keywords"
         placeholder="默认展示部分用户，可以通过用户名搜索用户..."
         prefix-icon="el-icon-search"
-        v-model="keywords"
         style="width: 400px"
         size="small"
-      ></el-input>
+      />
       <el-button
         type="primary"
         icon="el-icon-search"
@@ -41,20 +41,34 @@
           prop="userface"
         >
           <el-upload
-            class="avatar-uploader"
             :action="handleBeforeUploadImg()"
             :on-success="onUploadSuccessUserface"
             :on-remove="onUploadRemove"
             :multiple="false"
             :on-change="handleEditChange"
             :class="{ hide: hideUpload }"
-            :data="userface"
+            :data="{ module: 'UserFace' }"
             :limit="1"
             :file-list="fileList"
             list-type="picture-card"
           >
-            <i class="el-icon-plus"></i>
+            <i class="el-icon-plus" />
           </el-upload>
+          <!--          <el-upload-->
+          <!--            class="avatar-uploader"-->
+          <!--            :action="handleBeforeUploadImg()"-->
+          <!--            :on-success="onUploadSuccessUserface"-->
+          <!--            :on-remove="onUploadRemove"-->
+          <!--            :multiple="false"-->
+          <!--            :on-change="handleEditChange"-->
+          <!--            :class="{ hide: hideUpload }"-->
+          <!--            :data="userface"-->
+          <!--            :limit="1"-->
+          <!--            :file-list="fileList"-->
+          <!--            list-type="picture-card"-->
+          <!--          >-->
+          <!--            <i class="el-icon-plus"></i>-->
+          <!--          </el-upload>-->
         </el-form-item>
         <el-form-item
           label="用户名"
@@ -90,10 +104,10 @@
 
     <div style="display: flex; justify-content: space-around; flex-wrap: wrap">
       <el-card
-        style="width: 330px; margin-top: 10px"
         v-for="(user, index) in users"
         :key="index"
         v-loading="cardloading[index]"
+        style="width: 330px; margin-top: 10px"
       >
         <div slot="header" style="text-align: left">
           <span>{{ user.nickname }}</span>
@@ -112,7 +126,7 @@
               :src="user.userface"
               :alt="user.nickname"
               style="width: 70px; height: 70px"
-            />
+            >
           </div>
           <div
             style="
@@ -161,10 +175,10 @@
             <el-switch
               v-model="user.enabled"
               active-text="启用"
-              @change="enabledChange(user.enabled, user.id, index)"
               inactive-text="禁用"
               style="font-size: 12px"
-            ></el-switch>
+              @change="enabledChange(user.enabled, user.id, index)"
+            />
           </div>
         </div>
       </el-card>
@@ -184,56 +198,62 @@
 </template>
 <script>
 import { getUserList, deleteRequest, userEnabled, saveUser } from '@/api/user'
+import webConfigApi from '@/api/core/webConfig'
 
 export default {
+  data() {
+    return {
+      loading: false,
+      eploading: [],
+      cardloading: [],
+      keywords: '',
+      users: [],
+      allRoles: [],
+      roles: [],
+      cpRoles: [],
+      total: 0, // 数据库中的总记录数
+      page: 1, // 默认页码
+      limit: 12, // 每页记录数
+      dialogVisible: false,
+      formLabelWidth: '120px',
+      hideUpload: false,
+      limitCount: 1,
+      uploadUrl: '/file/upload', // 图片上传地址
+      BASE_API: process.env.VUE_APP_BASE_API, // 获取后端接口地址
+      fileList: [],
+      form: { roles: [{ id: 0, name: '' }] }, // 新增,
+      rules: {
+        username: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          { min: 1, max: 20, message: '长度在1到20个字符' }
+        ],
+        nickname: [
+          { required: true, message: '昵称不能为空', trigger: 'blur' },
+          { min: 1, max: 20, message: '长度在1到20个字符' }
+        ],
+        // status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
+        email: [
+          {
+            type: 'email',
+            required: true,
+            message: '请填写正确邮箱地址',
+            trigger: 'blur'
+          }
+        ],
+        mobile: [{ required: true, message: '号码不能为空', trigger: 'blur' }]
+      }
+    }
+  },
+  created() {
+    this.getUserList(this.page, this.limit)
+  },
   methods: {
-    // saveRoles(id, index){
-    //   var selRoles = this.roles;
-    //   if (this.cpRoles.length == selRoles.length) {
-    //     for (var i = 0; i < this.cpRoles.length; i++) {
-    //       for (var j = 0; j < selRoles.length; j++) {
-    //         if (this.cpRoles[i].id == selRoles[j]) {
-    //           selRoles.splice(j, 1);
-    //           break;
-    //         }
-    //       }
-    //     }
-    //     if (selRoles.length == 0) {
-    //       return;
-    //     }
-    //   }
-    //   var _this = this;
-    //   _this.cardloading.splice(index, 1, true)
-    //   putRequest("/admin/user/role", {rids: this.roles, id: id}).then(resp=> {
-    //     if (resp.status == 200 && resp.data.status == 'success') {
-    //       _this.$message({type: resp.data.status, message: resp.data.msg});
-    //       _this.loadOneUserById(id, index);
-    //     } else {
-    //       _this.cardloading.splice(index, 1, false)
-    //       _this.$message({type: 'error', message: '更新失败!'});
-    //     }
-    //   }, resp=> {
-    //     _this.cardloading.splice(index, 1, false)
-    //     if (resp.response.status == 403) {
-    //       var data = resp.response.data;
-    //       _this.$message({type: 'error', message: data});
-    //     }
-    //   });
-    // },
-    // showRole(aRoles, id, index){
-    //   this.cpRoles = aRoles;
-    //   this.roles = [];
-    //   this.loadRoles(index);
-    //   for (var i = 0; i < aRoles.length; i++) {
-    //     this.roles.push(aRoles[i].id);
-    //   }
-    // },
     deleteUser(id) {
       var _this = this
       this.$confirm('删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           _this.loading = true
@@ -256,34 +276,32 @@ export default {
         .catch(() => {
           _this.$message({
             type: 'info',
-            message: '已取消删除',
+            message: '已取消删除'
           })
         })
     },
     // 关闭dialog时清空数据
     closeDialog() {
       this.form = {}
-      this.onUploadRemove();//删除图片
+      this.onUploadRemove() // 删除图片
       this.$refs.form.clearValidate() // 移除该表单项的校验结果
     },
     handleBeforeUploadImg() {
-      console.log(this.BASE_API + this.uploadUrl)
       return this.BASE_API + this.uploadUrl
     },
-    onUploadSuccessUserface() {
+    onUploadSuccessUserface(response, file) {
       this.onUploadSuccess(response, file, 'Userface')
     },
     onUploadSuccess(response, file, type) {
       // debugger
       if (response.code !== 200) {
-        this.$message({ type: 'error', message: response.message })
+        this.$message.error(response.message)
         return
       }
       // 填充上传文件
-      console.log(response)
       this.form.userface = response.data
     },
-    onUploadRemove() {
+    onUploadRemove(file, fileList) {
       // 删除oss服务器上的内容
       this.url = file.url
       webConfigApi.delete(this.url).then((response) => {
@@ -291,23 +309,22 @@ export default {
         this.hideUpload = fileList.length >= this.limitCount
       })
     },
-    handleEditChange() {
+    handleEditChange(file, fileList) {
       console.log(file)
       this.hideUpload = fileList.length >= this.limitCount
     },
     // 提交表单
     approvalSubmit() {
       // this.from.concat({"roles":[{"id": 0,"name": ""}]})
-      console.log(this.form)
-      return
+
       this.$refs.form.validate((valid) => {
         if (!valid) {
           console.log('校验出错')
         } else {
           if (this.form.id != null) {
-            //修改
+            // 修改
           } else {
-            //新增
+            // 新增
             saveUser(this.form).then((res) => {
               this.dialogVisible = false
               this.$message({ type: 'success', message: '新增成功!' })
@@ -362,53 +379,7 @@ export default {
     changeCurrentPage(page) {
       this.page = page
       this.getUserList(page, this.limit)
-    },
-  },
-  data() {
-    return {
-      loading: false,
-      eploading: [],
-      cardloading: [],
-      keywords: '',
-      users: [],
-      allRoles: [],
-      roles: [],
-      cpRoles: [],
-      total: 0, // 数据库中的总记录数
-      page: 1, // 默认页码
-      limit: 12, // 每页记录数
-      dialogVisible: false,
-      formLabelWidth: '120px',
-      hideUpload: false,
-      limitCount: 1,
-      uploadUrl: '/file/upload', // 图片上传地址
-      BASE_API: process.env.VUE_APP_BASE_API, // 获取后端接口地址
-      fileList: [],
-      form: { roles: [{ id: 0, name: '' }] }, // 新增,
-      rules: {
-        username: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在1到20个字符' },
-        ],
-        nickname: [
-          { required: true, message: '昵称不能为空', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在1到20个字符' },
-        ],
-        // status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
-        email: [
-          {
-            type: 'email',
-            required: true,
-            message: '请填写正确邮箱地址',
-            trigger: 'blur',
-          },
-        ],
-        mobile: [{ required: true, message: '号码不能为空', trigger: 'blur' }],
-      },
     }
-  },
-  created() {
-    this.getUserList(this.page, this.limit)
-  },
+  }
 }
 </script>

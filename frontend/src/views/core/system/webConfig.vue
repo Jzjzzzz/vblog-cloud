@@ -166,7 +166,6 @@ export default {
   // 定义方法
   methods: {
     handleBeforeUploadImg: function() {
-      console.log(this.BASE_API + this.uploadUrl)
       return this.BASE_API + this.uploadUrl
     },
     handleEditChange(file, fileList) {
@@ -196,7 +195,6 @@ export default {
         return
       }
       // 填充上传文件
-      console.log(response)
       this.form.logo = response.data
     },
     fetchData() {
