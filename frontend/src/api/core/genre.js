@@ -59,4 +59,18 @@ export default {
       method: 'get',
     })
   },
+
+  listOrderByDesc(page, limit, field) {
+    return request({
+      url: `/article/listOrderByDESC/${page}/${limit}/${field}`,
+      method: 'get',
+    })
+  },
+  getCategory(page, limit) {
+    return request({
+      url: `/category/list/${page}/${limit}`,
+      method: 'get',
+    })
+  }
+
 }

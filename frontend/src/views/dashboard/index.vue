@@ -74,6 +74,23 @@
         </div>
       </el-col>
     </el-row>
+
+
+
+    <el-row :gutter="32">
+      <el-col :xs="26" :sm="26" :lg="10">
+        <div class="chart-wrapper">
+<!--          <raddar-chart />-->
+          <transaction-table />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart />
+        </div>
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
@@ -85,9 +102,13 @@ import { getUserList } from '@/api/user'
 import { mapGetters } from 'vuex'
 import countTo from 'vue-count-to'
 import { list } from '@/api/article'
+import TransactionTable from '@/views/dashboard/components/TransactionTable'
+import RaddarChart from '@/views/dashboard/components/RaddarChart'
+import PieChart from '@/views/dashboard/components/PieChart'
+import BarChart from '@/views/dashboard/components/BarChart'
 export default {
   name: 'Dashboard',
-  components: { countTo },
+  components: { countTo, TransactionTable, PieChart, BarChart , RaddarChart  },
   data() {
     return {
       uCount: '', // 用户数
