@@ -1,0 +1,38 @@
+server:
+  port: 5500
+spring:
+  application:
+    name:  cloud-config-center #注册进Eureka服务器的微服务名
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/jzjzz/springcloud-config.git #GitHub上面的git仓库名字
+          ####搜索目录
+          search-paths:
+            - springcloud-config
+          username: 18176702572
+          password: jzj1410357039
+      ####读取分支
+      label: master
+  #RabbitMQ配置
+  rabbitmq:
+    host: 47.98.149.78
+    port: 5672
+    username: admin
+    password: 123
+
+#服务注册到eureka地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.1.108:7001/eureka
+  instance:
+    instance-id: config5500
+    prefer-ip-address: true #访问路径可以显示ip地址
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'

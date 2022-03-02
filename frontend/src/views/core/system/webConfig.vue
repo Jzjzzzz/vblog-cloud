@@ -153,7 +153,7 @@ export default {
       },
       hideUpload: false,
       limitCount: 1,
-      uploadUrl: '/file/upload', // 图片上传地址
+      uploadUrl: '/api/oss/fileoss/upload', // 图片上传地址
       BASE_API: process.env.VUE_APP_BASE_API, // 获取后端接口地址
       fileList: []
     }

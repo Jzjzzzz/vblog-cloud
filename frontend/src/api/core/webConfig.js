@@ -23,7 +23,7 @@ export default {
   },
   delete(url) {
     return request({
-      url: '/file/remove?url=' + url,
+      url: '/api/oss/fileoss/remove?url=' + url,
       method: 'delete'
     })
   }

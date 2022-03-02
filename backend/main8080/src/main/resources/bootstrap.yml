@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: blogserver
+  zipkin:
+    base-url: http://192.168.1.108:9411
+  sleuth:
+    sampler:
+      probability: 1
+  cloud:
+    #Config客户端配置
+    config:
+      label: master #分支名称
+      name: config #配置文件名称
+      profile: dev #读取后缀名称   上述3个综合：master分支上config-dev.yml的配置文件被读取http://config-3344.com:3344/master/config-dev.yml
+      uri: http://192.168.1.108:5500 #配置中心地址k
+  rabbitmq:
+    host: 47.98.149.78
+    port: 5672
+    username: admin
+    password: 123
+  redis:
+    host: 110.42.224.240
+    port: 6379
+    database: 0
+    password: 1410357039 #默认为空
+    timeout: 3000ms #最大等待时间，超时则抛出异常，否则请求一直等待
+    lettuce:
+      pool:
+        max-active: 20  #最大连接数，负值表示没有限制，默认8
+        max-wait: -1    #最大阻塞等待时间，负值表示没限制，默认-1
+        max-idle: 8     #最大空闲连接，默认8
+        min-idle: 0     #最小空闲连接，默认0
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#服务注册到eureka地址
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://192.168.1.108:7001/eureka/
+  instance:
+    instance-id: payment8080
+    prefer-ip-address: true #访问路径可以显示ip地址

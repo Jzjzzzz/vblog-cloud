@@ -19,6 +19,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @MapperScan("team.blogserver.common.mapper")
 public class MyBatisPlusConfiguration {
+
+
+
+
+
     /**
      * 自定义插件
      */

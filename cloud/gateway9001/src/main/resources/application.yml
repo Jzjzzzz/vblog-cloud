@@ -1,0 +1,37 @@
+server:
+  port: 9001 # 服务端口
+spring:
+  profiles:
+    active: dev # 环境设置
+  application:
+    name: service-gateway # 服务名
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        - id: payment8080 #路由的ID，没有固定规则但要求唯一，建议配合服务名
+          uri: lb://blogserver #匹配后提供服务的路由地址
+          predicates:
+            - Path=/user/**, /article/**, /category/**, /file/**, /journal/**, /tags/**, /config/**  # 断言，路径相匹配的进行路由
+        - id: service-sms
+          uri: lb://service-sms
+          predicates:
+            - Path=/sms/**
+        - id: service-oss
+          uri: lb://service-oss
+          predicates:
+            - Path=/api/oss/**
+
+#注册中心配置
+eureka:
+  instance:
+    hostname: service-gateway
+    instance-id: gateway9001
+    prefer-ip-address: true #访问路径可以显示ip地址
+  client: #服务提供者provider注册进eureka服务列表内
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://192.168.1.101:7001/eureka/

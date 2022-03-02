@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import team.ark.core.cache.store.CacheStore;
+import team.ark.core.oss.OssProperties;
 import team.ark.core.response.R;
 import team.ark.core.security.JwtUtils;
 import team.ark.core.security.UserDetails;
@@ -41,6 +43,8 @@ public class UserController {
     private RolesUserMapper rolesUserMapper;
     @Resource
     private CacheStore cacheStore;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 查询用户列表
@@ -142,7 +146,7 @@ public class UserController {
         String mobile = mobileCode.getMobile();
         String code = mobileCode.getCode();
         // 判断手机号键和验证码值是否在缓存中
-        Assert.isTrue(cacheStore.get(mobile).orElse("").equals(code), "验证码不正确");
+        Assert.isTrue(redisTemplate.opsForValue().get("vblog:sms:code:"+mobile).equals(code), "验证码不正确");
         // 消费缓存
         cacheStore.delete(mobile);
         // 生成Security用户
@@ -156,5 +160,23 @@ public class UserController {
                 .collect(Collectors.toList()));
         // 生成Token
         return R.ok(JwtUtils.createAccessToken(userDetails));
+    }
+
+
+    @ApiOperation("根据手机号查询用户是否存在")
+    @GetMapping("/getOneByMobile/{mobile}")
+    public Boolean getOneByMobile(@PathVariable String mobile) {
+        log.info("执行了8080");
+        User user = userService.getOne(new QueryWrapper<User>().eq("mobile",mobile));
+        if(user!=null){
+            return true;
+        }
+        return false;
+    }
+    @ApiOperation("熔断测试")
+    @GetMapping("/getTest")
+    public Boolean getTest() {
+        log.info(OssProperties.BUCKET_NAME);
+        return true;
     }
 }

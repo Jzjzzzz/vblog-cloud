@@ -46,23 +46,23 @@ export function getUserList(page, limit, name) {
 }
 
 export function deleteRequest(id) {
-    return request({
-        url: `/user/remove/${id}`,
-        method: 'DELETE'
-    })
+  return request({
+    url: `/user/remove/${id}`,
+    method: 'DELETE'
+  })
 }
 
 export function userEnabled(id) {
-    return request({
-        url: `/user/update/${id}`,
-        method: 'PUT'
-    })
+  return request({
+    url: `/user/update/${id}`,
+    method: 'PUT'
+  })
 }
 
 export function saveUser(data) {
-    return request({
-        url: "/user/save",
-        method: 'POST',
-        data
-    })
+  return request({
+    url: "/user/save",
+    method: 'POST',
+    data
+  })
 }
